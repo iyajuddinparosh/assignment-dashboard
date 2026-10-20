@@ -1,0 +1,5 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="theme-color" content="#0f766e"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Electricity Billing</title><link rel="stylesheet" href="style.css"></head>
+<body><main class="container"><h1>Smart Electricity Billing</h1><p class="muted">Progressive unit slabs · VAT 15% · Service charge Tk 100</p>
+<label>Electricity units used<input id="units" type="number" min="0" step="1" value="250" onkeyup="calculateBill()"></label>
+<button onclick="calculateBill()">Generate Bill</button><section id="bill" class="result" aria-live="polite"></section></main><script src="script.js"></script></body></html>

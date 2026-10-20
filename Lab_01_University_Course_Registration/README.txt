@@ -1,0 +1,1 @@
+Lab 1 University Course Registration. Keep index.html, style.css and script.js in the same folder and open index.html in a browser. Event handlers: onclick, onchange, onblur. Assumptions: Tk 1,000 per credit, 10% discount above 12 credits, Student ID exactly 8 digits.

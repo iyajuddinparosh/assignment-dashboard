@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assignment Dashboard</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #fff;
+      --text: #202238;
+      --muted: #70758b;
+      --border: #e5e7f0;
+      --purple: #5b56c9;
+      --purple-light: #eeedff;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: var(--text); background: var(--bg); }
+    .container { width: min(1000px, calc(100% - 36px)); margin: 0 auto; padding: 30px 0; }
+    .hero {
+      padding: 30px 32px; border-radius: 16px; color: #fff;
+      background: linear-gradient(110deg, #34356f, #5b56c9);
+    }
+    h1 { margin: 0 0 9px; font-size: clamp(28px, 4vw, 40px); letter-spacing: -.035em; }
+    .hero p { margin: 0; color: #e9e8ff; font-size: 14px; line-height: 1.65; }
+    .hero-stats { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 18px; }
+    .stat { padding: 8px 11px; border-radius: 8px; background: rgba(255,255,255,.13); font-size: 12px; }
+    .stat strong { font-size: 14px; margin-right: 5px; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin: 28px 0 14px; }
+    .eyebrow { margin-bottom: 6px; color: var(--purple); font-size: 10px; font-weight: 800; letter-spacing: .12em; }
+    h2 { margin: 0; font-size: 22px; }
+    .section-note { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
+    .count { color: var(--muted); font-size: 12px; }
+    .projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+    .project {
+      display: flex; align-items: flex-start; gap: 13px; min-width: 0;
+      padding: 16px; background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; text-decoration: none; color: inherit;
+      transition: border-color .15s, transform .15s;
+    }
+    .project:hover { border-color: #b8b5f0; transform: translateY(-2px); }
+    .project:focus-visible { outline: 2px solid #aaa6ed; outline-offset: 3px; }
+    .project-icon {
+      width: 42px; height: 42px; flex: 0 0 42px; display: grid; place-items: center;
+      border-radius: 10px; background: var(--purple-light); color: var(--purple); font-size: 17px;
+    }
+    .project:nth-child(2) .project-icon { background: #e2f6f0; color: #198575; }
+    .project:nth-child(3) .project-icon { background: #fff0e3; color: #b96b2e; }
+    .project:nth-child(4) .project-icon { background: #e9f1ff; color: #3d72bc; }
+    .project:nth-child(5) .project-icon { background: #ffedf5; color: #b24c80; }
+    .project:nth-child(6) .project-icon { background: #eceeff; color: #5867c4; }
+    .project:nth-child(7) .project-icon { background: #e6f7eb; color: #2d865a; }
+    .project:nth-child(8) .project-icon { background: #ffeded; color: #b34e48; }
+    .project:nth-child(9) .project-icon { background: #f3eaff; color: #885fb7; }
+    .project:nth-child(10) .project-icon { background: #fff6d9; color: #a78324; }
+    .project-text { flex: 1; min-width: 0; }
+    .project-meta { display: block; margin-bottom: 4px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+    .project-title { display: block; font-size: 13px; line-height: 1.45; font-weight: 700; }
+    .project-summary { display: block; margin-top: 6px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .arrow { color: #989caf; font-size: 20px; padding-top: 2px; }
+    .project:hover .arrow { color: var(--purple); }
+    footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--muted); font-size: 11px; }
+    @media (max-width: 650px) {
+      .container { width: min(100% - 26px, 1000px); padding-top: 20px; }
+      .hero { padding: 24px 21px; }
+      .projects { grid-template-columns: 1fr; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>Assignment Dashboard</h1>
+      <p>All your lab projects in one place. Select an assignment below to open it.</p>
+      <div class="hero-stats">
+        <span class="stat"><strong>10</strong> Total projects</span>
+        <span class="stat">Web Development Assignments</span>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">PROJECT LIBRARY</div>
+          <h2>All Assignments</h2>
+          <p class="section-note">Choose a project to get started.</p>
+        </div>
+        <span class="count">01–10</span>
+      </div>
+      <div class="projects">
+        <a class="project" href="Lab_01_University_Course_Registration/index.html"><span class="project-icon">⌂</span><span class="project-text"><span class="project-meta">Lab 01</span><span class="project-title">University Course Registration</span><span class="project-summary">Select courses, calculate credit hours, and estimate tuition with discount.</span></span><span class="arrow">›</span></a>
+        <a class="project" href="Lab_02_Smart_Electricity_Billing/index.html"><span class="project-icon">ϟ</span><span class="project-text"><span class="project-meta">Lab 02</span><span class="project-title">Smart Electricity Billing</span><span class="project-summary">Enter electricity usage and calculate the bill from consumed units.</span></span><span class="arrow">›</span></a>
+        <a class="project" href="Lab_03_Hospital_Management_Billing/index.html"><span class="project-icon">✚</span><span class="project-text"><span class="project-meta">Lab 03</span><span class="project-title">Hospital Management & Billing</span><span class="project-summary">Add patient details and generate a simple hospital billing summary.</span></span><span class="arrow">›</span></a>
+        <a class="project" href="Lab_04_Online_Shopping_Cart/index.html"><span class="project-icon">▣</span><span class="project-text"><span class="project-meta">Lab 04</span><span class="project-title">Online Shopping Cart</span><span class="project-summary">Choose products, update quantities, and view the cart total.</span></span><span class="arrow">›</span></a>
+        <a class="project" href="Lab_05_Employee_Payroll/index.html"><span class="project-icon">＄</span><span class="project-text"><span class="project-meta">Lab 05</span><span class="project-title">Employee Payroll</span><span class="project-summary">Calculate employee salary using allowances and deductions.</span></span><span class="arrow">›</span></a>
+        <a class="project" href="Lab_06_Banking_Transaction_Dashboard/index.html"><span class="project-icon">▤</span><span class="project-text"><span class="project-meta">Lab 06</span><span class="project-title">Banking Transaction Dashboard</span><span class="project-summary">Review transactions and calculate the updated account balance.</span></span><span class="arrow">›</span></a>
+        <a class="project" href="Lab_07_Student_Result_Processing/index.html"><span class="project-icon">✓</span><span class="project-text"><span class="project-meta">Lab 07</span><span class="project-title">Student Result Processing</span><span class="project-summary">Enter marks and calculate total, average, grade, and result.</span></span><span class="arrow">›</span></a>
+        <a class="project" href="Lab_08_Bus_Ticket_Reservation/index.html"><span class="project-icon">▰</span><span class="project-text"><span class="project-meta">Lab 08</span><span class="project-title">Bus Ticket Reservation</span><span class="project-summary">Enter passenger details and prepare a ticket booking summary.</span></span><span class="arrow">›</span></a>
+        <a class="project" href="Lab_09_Inventory_Management/index.html"><span class="project-icon">▱</span><span class="project-text"><span class="project-meta">Lab 09</span><span class="project-title">Inventory Management</span><span class="project-summary">Track items, quantities, and basic stock information.</span></span><span class="arrow">›</span></a>
+        <a class="project" href="Lab_10_Restaurant_POS/index.html"><span class="project-icon">♨</span><span class="project-text"><span class="project-meta">Lab 10</span><span class="project-title">Restaurant POS</span><span class="project-summary">Select menu items and calculate the order bill.</span></span><span class="arrow">›</span></a>
+      </div>
+    </section>
+    <footer><span>Assignment Dashboard</span><span>10 projects</span></footer>
+  </main>
+</body>
+</html>
