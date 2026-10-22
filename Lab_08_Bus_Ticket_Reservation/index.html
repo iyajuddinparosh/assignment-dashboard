@@ -1,3 +1,44 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="theme-color" content="#c2410c"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Bus Ticket Reservation</title><link rel="stylesheet" href="style.css"></head>
-<body><main class="container"><h1>Bus Ticket Reservation</h1><form id="bookingForm"><label>Passenger name<input id="passenger" required></label><label>Destination<select id="destination"><option value="500">Dhaka — Tk 500</option><option value="800">Chittagong — Tk 800</option><option value="700">Sylhet — Tk 700</option><option value="600">Rajshahi — Tk 600</option></select></label><label>Number of seats<input id="seats" type="number" min="1" step="1" value="1" required></label><label>Passenger category<select id="category"><option value="0">Regular — 0%</option><option value="50">Child — 50%</option><option value="15">Student — 15%</option><option value="20">Senior citizen — 20%</option></select></label><button>Book Tickets</button></form><p>Available seats: <strong id="available">40 / 40</strong></p><section id="ticket" class="result" hidden></section></main><script src="script.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="theme-color" content="#c2410c" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bus Ticket Reservation</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Bus Ticket Reservation</h1>
+      <form id="bookingForm">
+        <label>Passenger name<input id="passenger" required /></label
+        ><label
+          >Destination<select id="destination">
+            <option value="500">Dhaka — Tk 500</option>
+            <option value="800">Chittagong — Tk 800</option>
+            <option value="700">Sylhet — Tk 700</option>
+            <option value="600">Rajshahi — Tk 600</option>
+          </select></label
+        ><label
+          >Number of seats<input
+            id="seats"
+            type="number"
+            min="1"
+            step="1"
+            value="1"
+            required /></label
+        ><label
+          >Passenger category<select id="category">
+            <option value="0">Regular — 0%</option>
+            <option value="50">Child — 50%</option>
+            <option value="15">Student — 15%</option>
+            <option value="20">Senior citizen — 20%</option>
+          </select></label
+        ><button>Book Tickets</button>
+      </form>
+      <p>Available seats: <strong id="available">40 / 40</strong></p>
+      <section id="ticket" class="result" hidden></section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>

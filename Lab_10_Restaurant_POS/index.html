@@ -1,3 +1,39 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="theme-color" content="#b45309"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Restaurant POS</title><link rel="stylesheet" href="style.css"></head>
-<body><main class="container"><h1>Restaurant POS</h1><p class="muted">Menu items · VAT 15% · Service charge 5%</p><div id="menu" class="products"></div><h2>Current Order</h2><div class="table-wrap"><table><thead><tr><th>Item</th><th>Price</th><th>Qty</th><th>Total</th><th></th></tr></thead><tbody id="order"></tbody></table></div><section id="totals" class="result"></section><div class="actions"><button onclick="makeInvoice()">Generate Invoice</button><button class="secondary" onclick="clearOrder()">Clear Order</button></div><section id="invoice" class="result" hidden></section></main><script src="script.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="theme-color" content="#b45309" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Restaurant POS</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Restaurant POS</h1>
+      <p class="muted">Menu items · VAT 15% · Service charge 5%</p>
+      <div id="menu" class="products"></div>
+      <h2>Current Order</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Price</th>
+              <th>Qty</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="order"></tbody>
+        </table>
+      </div>
+      <section id="totals" class="result"></section>
+      <div class="actions">
+        <button onclick="makeInvoice()">Generate Invoice</button
+        ><button class="secondary" onclick="clearOrder()">Clear Order</button>
+      </div>
+      <section id="invoice" class="result" hidden></section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>

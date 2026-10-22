@@ -1,134 +1,278 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Assignment dashboard with links to 10 web development lab projects.">
-  <title>Assignment Dashboard</title>
-  <style>
-    :root {
-      --bg: #f7f8fc;
-      --surface: #ffffff;
-      --text: #20243a;
-      --muted: #737991;
-      --line: #e8eaf2;
-      --accent: #5b5bd6;
-      --accent-soft: #efefff;
-      --shadow: 0 8px 24px rgba(28, 34, 74, .06);
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-    .wrap { width: min(100% - 36px, 1040px); margin: 0 auto; padding: 48px 0 36px; }
-    header { margin-bottom: 28px; }
-    .eyebrow {
-      display: inline-flex; align-items: center; gap: 8px;
-      color: var(--accent); background: var(--accent-soft);
-      border-radius: 999px; padding: 7px 12px; font-size: 12px; font-weight: 700;
-      letter-spacing: .06em; text-transform: uppercase;
-    }
-    h1 { margin: 16px 0 8px; font-size: clamp(30px, 5vw, 42px); line-height: 1.1; letter-spacing: -.04em; }
-    .sub { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.65; }
-    .section-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 30px 0 14px; }
-    .section-head h2 { margin: 0; font-size: 17px; }
-    .count { color: var(--muted); font-size: 13px; }
-    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-    .project {
-      display: flex; align-items: center; gap: 14px; min-width: 0;
-      padding: 18px; border: 1px solid var(--line); border-radius: 15px;
-      background: var(--surface); text-decoration: none; color: inherit;
-      box-shadow: 0 1px 2px rgba(28, 34, 74, .02);
-      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
-    }
-    .project:hover { transform: translateY(-2px); border-color: #c9c9fb; box-shadow: var(--shadow); }
-    .project:focus-visible { outline: 3px solid #b9b9ff; outline-offset: 3px; }
-    .num {
-      flex: 0 0 44px; width: 44px; height: 44px; display: grid; place-items: center;
-      background: #f1f2f8; border-radius: 12px; color: #505775; font-size: 13px; font-weight: 800;
-    }
-    .details { min-width: 0; flex: 1; }
-    .details strong { display: block; font-size: 14px; line-height: 1.4; font-weight: 700; }
-    .details span { display: block; margin-top: 4px; color: var(--muted); font-size: 12px; }
-    .arrow { color: #a1a6bb; font-size: 22px; transition: transform .16s ease, color .16s ease; }
-    .project:hover .arrow { transform: translateX(3px); color: var(--accent); }
-    footer { margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; text-align: center; }
-    @media (max-width: 650px) {
-      .wrap { width: min(100% - 28px, 1040px); padding-top: 32px; }
-      .grid { grid-template-columns: 1fr; gap: 10px; }
-      .project { padding: 15px; }
-      .section-head { margin-top: 24px; }
-    }
-  </style>
-</head>
-<body>
-  <main class="wrap">
-    <header>
-      <span class="eyebrow">Web Development</span>
-      <h1>Assignment Dashboard</h1>
-      <p class="sub">Choose a project below to open its assignment.</p>
-    </header>
-    <div class="section-head">
-      <h2>All Projects</h2>
-      <span class="count">10 projects</span>
-    </div>
-    <section class="grid" aria-label="Assignment projects">
-      <a class="project" href="Lab_01_University_Course_Registration/index.html">
-        <span class="num">01</span>
-        <span class="details"><strong>University Course Registration</strong><span>Lab 01</span></span>
-        <span class="arrow" aria-hidden="true">›</span>
-      </a>
-      <a class="project" href="Lab_02_Smart_Electricity_Billing/index.html">
-        <span class="num">02</span>
-        <span class="details"><strong>Smart Electricity Billing</strong><span>Lab 02</span></span>
-        <span class="arrow" aria-hidden="true">›</span>
-      </a>
-      <a class="project" href="Lab_03_Hospital_Management_Billing/index.html">
-        <span class="num">03</span>
-        <span class="details"><strong>Hospital Management & Billing</strong><span>Lab 03</span></span>
-        <span class="arrow" aria-hidden="true">›</span>
-      </a>
-      <a class="project" href="Lab_04_Online_Shopping_Cart/index.html">
-        <span class="num">04</span>
-        <span class="details"><strong>Online Shopping Cart</strong><span>Lab 04</span></span>
-        <span class="arrow" aria-hidden="true">›</span>
-      </a>
-      <a class="project" href="Lab_05_Employee_Payroll/index.html">
-        <span class="num">05</span>
-        <span class="details"><strong>Employee Payroll</strong><span>Lab 05</span></span>
-        <span class="arrow" aria-hidden="true">›</span>
-      </a>
-      <a class="project" href="Lab_06_Banking_Transaction_Dashboard/index.html">
-        <span class="num">06</span>
-        <span class="details"><strong>Banking Transaction Dashboard</strong><span>Lab 06</span></span>
-        <span class="arrow" aria-hidden="true">›</span>
-      </a>
-      <a class="project" href="Lab_07_Student_Result_Processing/index.html">
-        <span class="num">07</span>
-        <span class="details"><strong>Student Result Processing</strong><span>Lab 07</span></span>
-        <span class="arrow" aria-hidden="true">›</span>
-      </a>
-      <a class="project" href="Lab_08_Bus_Ticket_Reservation/index.html">
-        <span class="num">08</span>
-        <span class="details"><strong>Bus Ticket Reservation</strong><span>Lab 08</span></span>
-        <span class="arrow" aria-hidden="true">›</span>
-      </a>
-      <a class="project" href="Lab_09_Inventory_Management/index.html">
-        <span class="num">09</span>
-        <span class="details"><strong>Inventory Management</strong><span>Lab 09</span></span>
-        <span class="arrow" aria-hidden="true">›</span>
-      </a>
-      <a class="project" href="Lab_10_Restaurant_POS/index.html">
-        <span class="num">10</span>
-        <span class="details"><strong>Restaurant POS</strong><span>Lab 10</span></span>
-        <span class="arrow" aria-hidden="true">›</span>
-      </a>
-    </section>
-    <footer>Assignment Dashboard · 10 Projects</footer>
-  </main>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Assignment dashboard with links to 10 web development lab projects."
+    />
+    <title>Assignment Dashboard</title>
+    <style>
+      :root {
+        --bg: #f7f8fc;
+        --surface: #ffffff;
+        --text: #20243a;
+        --muted: #737991;
+        --line: #e8eaf2;
+        --accent: #5b5bd6;
+        --accent-soft: #efefff;
+        --shadow: 0 8px 24px rgba(28, 34, 74, 0.06);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+      }
+      .wrap {
+        width: min(100% - 36px, 1040px);
+        margin: 0 auto;
+        padding: 48px 0 36px;
+      }
+      header {
+        margin-bottom: 28px;
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-radius: 999px;
+        padding: 7px 12px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 16px 0 8px;
+        font-size: clamp(30px, 5vw, 42px);
+        line-height: 1.1;
+        letter-spacing: -0.04em;
+      }
+      .sub {
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.65;
+      }
+      .section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin: 30px 0 14px;
+      }
+      .section-head h2 {
+        margin: 0;
+        font-size: 17px;
+      }
+      .count {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+      .project {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-width: 0;
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        background: var(--surface);
+        text-decoration: none;
+        color: inherit;
+        box-shadow: 0 1px 2px rgba(28, 34, 74, 0.02);
+        transition:
+          transform 0.16s ease,
+          box-shadow 0.16s ease,
+          border-color 0.16s ease;
+      }
+      .project:hover {
+        transform: translateY(-2px);
+        border-color: #c9c9fb;
+        box-shadow: var(--shadow);
+      }
+      .project:focus-visible {
+        outline: 3px solid #b9b9ff;
+        outline-offset: 3px;
+      }
+      .num {
+        flex: 0 0 44px;
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        background: #f1f2f8;
+        border-radius: 12px;
+        color: #505775;
+        font-size: 13px;
+        font-weight: 800;
+      }
+      .details {
+        min-width: 0;
+        flex: 1;
+      }
+      .details strong {
+        display: block;
+        font-size: 14px;
+        line-height: 1.4;
+        font-weight: 700;
+      }
+      .details span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .arrow {
+        color: #a1a6bb;
+        font-size: 22px;
+        transition:
+          transform 0.16s ease,
+          color 0.16s ease;
+      }
+      .project:hover .arrow {
+        transform: translateX(3px);
+        color: var(--accent);
+      }
+      footer {
+        margin-top: 30px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 12px;
+        text-align: center;
+      }
+      @media (max-width: 650px) {
+        .wrap {
+          width: min(100% - 28px, 1040px);
+          padding-top: 32px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+        .project {
+          padding: 15px;
+        }
+        .section-head {
+          margin-top: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <header>
+        <span class="eyebrow">Web Development</span>
+        <h1>Assignment Dashboard</h1>
+        <p class="sub">Choose a project below to open its assignment.</p>
+      </header>
+      <div class="section-head">
+        <h2>All Projects</h2>
+        <span class="count">10 projects</span>
+      </div>
+      <section class="grid" aria-label="Assignment projects">
+        <a
+          class="project"
+          href="Lab_01_University_Course_Registration/index.html"
+        >
+          <span class="num">01</span>
+          <span class="details"
+            ><strong>University Course Registration</strong
+            ><span>Lab 01</span></span
+          >
+          <span class="arrow" aria-hidden="true">›</span>
+        </a>
+        <a class="project" href="Lab_02_Smart_Electricity_Billing/index.html">
+          <span class="num">02</span>
+          <span class="details"
+            ><strong>Smart Electricity Billing</strong><span>Lab 02</span></span
+          >
+          <span class="arrow" aria-hidden="true">›</span>
+        </a>
+        <a class="project" href="Lab_03_Hospital_Management_Billing/index.html">
+          <span class="num">03</span>
+          <span class="details"
+            ><strong>Hospital Management & Billing</strong
+            ><span>Lab 03</span></span
+          >
+          <span class="arrow" aria-hidden="true">›</span>
+        </a>
+        <a class="project" href="Lab_04_Online_Shopping_Cart/index.html">
+          <span class="num">04</span>
+          <span class="details"
+            ><strong>Online Shopping Cart</strong><span>Lab 04</span></span
+          >
+          <span class="arrow" aria-hidden="true">›</span>
+        </a>
+        <a class="project" href="Lab_05_Employee_Payroll/index.html">
+          <span class="num">05</span>
+          <span class="details"
+            ><strong>Employee Payroll</strong><span>Lab 05</span></span
+          >
+          <span class="arrow" aria-hidden="true">›</span>
+        </a>
+        <a
+          class="project"
+          href="Lab_06_Banking_Transaction_Dashboard/index.html"
+        >
+          <span class="num">06</span>
+          <span class="details"
+            ><strong>Banking Transaction Dashboard</strong
+            ><span>Lab 06</span></span
+          >
+          <span class="arrow" aria-hidden="true">›</span>
+        </a>
+        <a class="project" href="Lab_07_Student_Result_Processing/index.html">
+          <span class="num">07</span>
+          <span class="details"
+            ><strong>Student Result Processing</strong><span>Lab 07</span></span
+          >
+          <span class="arrow" aria-hidden="true">›</span>
+        </a>
+        <a class="project" href="Lab_08_Bus_Ticket_Reservation/index.html">
+          <span class="num">08</span>
+          <span class="details"
+            ><strong>Bus Ticket Reservation</strong><span>Lab 08</span></span
+          >
+          <span class="arrow" aria-hidden="true">›</span>
+        </a>
+        <a class="project" href="Lab_09_Inventory_Management/index.html">
+          <span class="num">09</span>
+          <span class="details"
+            ><strong>Inventory Management</strong><span>Lab 09</span></span
+          >
+          <span class="arrow" aria-hidden="true">›</span>
+        </a>
+        <a class="project" href="Lab_10_Restaurant_POS/index.html">
+          <span class="num">10</span>
+          <span class="details"
+            ><strong>Restaurant POS</strong><span>Lab 10</span></span
+          >
+          <span class="arrow" aria-hidden="true">›</span>
+        </a>
+      </section>
+      <footer>Assignment Dashboard · 10 Projects</footer>
+    </main>
+  </body>
 </html>

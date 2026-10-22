@@ -1,5 +1,44 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="theme-color" content="#7c3aed"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Shopping Cart</title><link rel="stylesheet" href="style.css"></head>
-<body><main class="container"><h1>Online Shopping Cart</h1><p class="muted">Add products, change quantities, apply SAVE10 coupon</p>
-<div id="products" class="products"></div><h2>Your Cart</h2><div class="table-wrap"><table><thead><tr><th>Product</th><th>Price</th><th>Qty</th><th>Total</th><th></th></tr></thead><tbody id="cart"></tbody></table></div>
-<div class="grid"><label>Coupon code<input id="coupon" placeholder="SAVE10"></label><label>VAT (%)<input id="vatRate" type="number" min="0" max="100" value="5"></label></div><button onclick="applyCoupon()">Apply Coupon</button><p id="couponMessage"></p><section id="totals" class="result"></section><button onclick="generateInvoice()">Generate Invoice</button><section id="invoice" class="result" hidden></section></main><script src="script.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="theme-color" content="#7c3aed" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Online Shopping Cart</h1>
+      <p class="muted">Add products, change quantities, apply SAVE10 coupon</p>
+      <div id="products" class="products"></div>
+      <h2>Your Cart</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Qty</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="cart"></tbody>
+        </table>
+      </div>
+      <div class="grid">
+        <label>Coupon code<input id="coupon" placeholder="SAVE10" /></label
+        ><label
+          >VAT (%)<input id="vatRate" type="number" min="0" max="100" value="5"
+        /></label>
+      </div>
+      <button onclick="applyCoupon()">Apply Coupon</button>
+      <p id="couponMessage"></p>
+      <section id="totals" class="result"></section>
+      <button onclick="generateInvoice()">Generate Invoice</button>
+      <section id="invoice" class="result" hidden></section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>

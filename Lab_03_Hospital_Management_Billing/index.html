@@ -1,9 +1,52 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="theme-color" content="#be123c"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Hospital Billing</title><link rel="stylesheet" href="style.css"></head>
-<body><main class="container"><h1>Hospital Management Billing</h1>
-<form id="hospitalForm"><label>Patient name<input id="patient" required></label>
-<label>Cabin type<select id="cabin"><option value="1000">General — Tk 1,000/day</option><option value="2000">Semi Deluxe — Tk 2,000/day</option><option value="3500">Deluxe — Tk 3,500/day</option></select></label>
-<label>Number of days<input id="days" type="number" min="1" step="1" value="1" required></label>
-<label>Medicine cost (Tk)<input id="medicine" type="number" min="0" value="0" required></label>
-<label>Test cost (Tk)<input id="tests" type="number" min="0" value="0" required></label><button>Generate Receipt</button></form><section id="receipt" class="result" hidden></section></main>
-<script src="script.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="theme-color" content="#be123c" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hospital Billing</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Hospital Management Billing</h1>
+      <form id="hospitalForm">
+        <label>Patient name<input id="patient" required /></label>
+        <label
+          >Cabin type<select id="cabin">
+            <option value="1000">General — Tk 1,000/day</option>
+            <option value="2000">Semi Deluxe — Tk 2,000/day</option>
+            <option value="3500">Deluxe — Tk 3,500/day</option>
+          </select></label
+        >
+        <label
+          >Number of days<input
+            id="days"
+            type="number"
+            min="1"
+            step="1"
+            value="1"
+            required
+        /></label>
+        <label
+          >Medicine cost (Tk)<input
+            id="medicine"
+            type="number"
+            min="0"
+            value="0"
+            required
+        /></label>
+        <label
+          >Test cost (Tk)<input
+            id="tests"
+            type="number"
+            min="0"
+            value="0"
+            required /></label
+        ><button>Generate Receipt</button>
+      </form>
+      <section id="receipt" class="result" hidden></section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>

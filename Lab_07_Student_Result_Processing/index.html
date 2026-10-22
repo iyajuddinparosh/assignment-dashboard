@@ -1,3 +1,26 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="theme-color" content="#4338ca"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Student Results</title><link rel="stylesheet" href="style.css"></head>
-<body><main class="container"><h1>Student Result Processing</h1><form id="resultForm"><label>Student name<input id="student" required></label><label>Student ID<input id="sid" required></label><div class="grid" id="marks"></div><button>Calculate Result</button></form><section id="result" class="result" hidden></section><button class="secondary" onclick="window.print()">Print Marksheet</button></main><script src="script.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="theme-color" content="#4338ca" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Results</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Student Result Processing</h1>
+      <form id="resultForm">
+        <label>Student Name<input id="student" required /></label
+        ><label>Student ID<input id="sid" required /></label>
+        <div class="grid" id="marks"></div>
+        <button>Calculate Result</button>
+      </form>
+      <section id="result" class="result" hidden></section>
+      <button class="secondary" onclick="window.print()">
+        Print Marksheet
+      </button>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
