@@ -2,35 +2,338 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="theme-color" content="#0369a1" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Employee Payroll</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Employee Payroll System</title>
+    <style>
+      :root {
+        --blue: #0369a1;
+        --blue-dark: #0c4a6e;
+        --blue-light: #f0f9ff;
+        --green: #15803d;
+        --orange: #c2410c;
+        --purple: #6d28d9;
+        --text: #172033;
+        --muted: #69758a;
+        --line: #dbe4ee;
+        --red: #b42318;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 28px 16px;
+        font-family: Arial, sans-serif;
+        color: var(--text);
+        background: linear-gradient(135deg, #f0f9ff, #f8fafc 55%, #e0f2fe);
+        line-height: 1.5;
+      }
+      .container {
+        max-width: 760px;
+        margin: auto;
+        padding: 28px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: 0 16px 40px #0c4a6e14;
+      }
+      h1 {
+        margin: 0 0 8px;
+        color: var(--blue-dark);
+        font-size: clamp(25px, 4vw, 34px);
+      }
+      .note {
+        margin: 0 0 22px;
+        color: var(--muted);
+      }
+      form {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        font: inherit;
+        background: #fbfdff;
+      }
+      input:focus {
+        outline: 3px solid #e0f2fe;
+        border-color: var(--blue);
+      }
+      .field-error {
+        font-size: 12px;
+        color: var(--red);
+        font-weight: 400;
+      }
+      .field-error:empty {
+        display: none;
+      }
+      .invalid {
+        border-color: var(--red);
+        background: #fffafa;
+      }
+      button {
+        padding: 12px 16px;
+        border: 0;
+        border-radius: 9px;
+        background: var(--blue);
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      button:hover {
+        background: var(--blue-dark);
+      }
+      form button {
+        grid-column: 1/-1;
+      }
+      .result {
+        margin-top: 22px;
+        padding: 22px;
+        border: 1px solid #bae6fd;
+        border-radius: 13px;
+        background: linear-gradient(145deg, #f0f9ff, #fff);
+        box-shadow: inset 4px 0 #0369a1;
+      }
+      .result h2 {
+        margin: 0 0 14px;
+        color: var(--blue-dark);
+      }
+      .pay-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 9px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .pay-row span:last-child {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      .pay-row:nth-of-type(odd) {
+        color: var(--green);
+      }
+      .pay-row.tax {
+        color: var(--orange);
+      }
+      .pay-row.net {
+        margin-top: 8px;
+        padding: 15px 0 0;
+        border: 0;
+        color: var(--purple);
+        font-size: 20px;
+        font-weight: 800;
+      }
+      .print {
+        margin-top: 16px;
+        background: var(--green);
+      }
+      .print:hover {
+        background: #166534;
+      }
+      @media (max-width: 540px) {
+        body {
+          padding: 15px 9px;
+        }
+        .container {
+          padding: 20px 15px;
+        }
+        form {
+          grid-template-columns: 1fr;
+        }
+        form button {
+          grid-column: auto;
+        }
+        .result {
+          padding: 17px;
+        }
+      }
+      @media print {
+        body {
+          padding: 0;
+          background: white;
+        }
+        .container {
+          max-width: none;
+          border: 0;
+          box-shadow: none;
+        }
+        .note,
+        form,
+        .print {
+          display: none !important;
+        }
+        .result {
+          box-shadow: none;
+        }
+      }
+    </style>
   </head>
   <body>
     <main class="container">
       <h1>Employee Payroll System</h1>
-      <form id="payrollForm">
-        <label>Employee name<input id="name" required /></label
-        ><label
-          >Basic salary (Tk)<input
+      <p class="note">
+        Enter employee details to calculate salary, allowances, overtime, tax,
+        and take-home pay.
+      </p>
+      <form id="payrollForm" novalidate>
+        <label
+          >Employee Name
+          <input
+            id="name"
+            type="text"
+            placeholder="Enter employee name"
+            autocomplete="name"
+            required
+          />
+          <span id="nameError" class="field-error"></span>
+        </label>
+        <label
+          >Basic Salary (Tk)
+          <input
             id="salary"
             type="number"
             min="0"
-            value="40000"
-            required /></label
-        ><label
-          >Overtime hours<input
+            step="any"
+            placeholder="Enter basic salary"
+            required
+          />
+          <span id="salaryError" class="field-error"></span>
+        </label>
+        <label
+          >Overtime Hours
+          <input
             id="hours"
             type="number"
             min="0"
             step="0.5"
-            value="0"
-            required /></label
-        ><button>Generate Payslip</button>
+            placeholder="Enter overtime hours"
+            required
+          />
+          <span id="hoursError" class="field-error"></span>
+        </label>
+        <button type="submit">Generate Payslip</button>
       </form>
       <section id="payslip" class="result" hidden></section>
     </main>
-    <script src="script.js"></script>
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const form = $("payrollForm"),
+        payslip = $("payslip");
+      const fields = {
+        name: [$("name"), $("nameError")],
+        salary: [$("salary"), $("salaryError")],
+        hours: [$("hours"), $("hoursError")],
+      };
+      function showError(key, message) {
+        const [input, error] = fields[key];
+        error.textContent = message;
+        input.classList.toggle("invalid", !!message);
+        input.setAttribute("aria-invalid", message ? "true" : "false");
+      }
+      function checkName() {
+        const value = fields.name[0].value.trim();
+        const valid = /^[A-Za-z]+(?:[ '-][A-Za-z]+)*$/.test(value);
+        showError(
+          "name",
+          valid ? "" : "Enter a name using English letters only.",
+        );
+        return valid;
+      }
+      function checkNumber(key, label) {
+        const [input] = fields[key],
+          value = input.value.trim(),
+          number = Number(value);
+        const valid = value !== "" && Number.isFinite(number) && number >= 0;
+        showError(
+          key,
+          valid ? "" : label + " is required and must be 0 or more.",
+        );
+        return valid;
+      }
+      function money(n) {
+        return (
+          "Tk " +
+          n.toLocaleString("en-BD", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        );
+      }
+      fields.name[0].addEventListener("input", () => {
+        fields.name[0].value = fields.name[0].value.replace(/[0-9]/g, "");
+        checkName();
+        payslip.hidden = true;
+      });
+      fields.salary[0].addEventListener("input", () => {
+        checkNumber("salary", "Basic salary");
+        payslip.hidden = true;
+      });
+      fields.hours[0].addEventListener("input", () => {
+        checkNumber("hours", "Overtime hours");
+        payslip.hidden = true;
+      });
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const validName = checkName(),
+          validSalary = checkNumber("salary", "Basic salary"),
+          validHours = checkNumber("hours", "Overtime hours");
+        if (!validName || !validSalary || !validHours) {
+          payslip.hidden = true;
+          const invalid = Object.values(fields).find(([input]) =>
+            input.classList.contains("invalid"),
+          );
+          if (invalid) invalid[0].focus();
+          return;
+        }
+        const name = fields.name[0].value.trim(),
+          basic = Number(fields.salary[0].value),
+          hours = Number(fields.hours[0].value);
+        const house = basic * 0.2,
+          medical = basic * 0.1,
+          transport = basic * 0.05,
+          overtime = hours * 500;
+        const gross = basic + house + medical + transport + overtime;
+        const rate = gross > 100000 ? 0.15 : gross > 50000 ? 0.1 : 0,
+          tax = gross * rate,
+          net = gross - tax;
+        payslip.innerHTML = `
+ <h2>Payslip: ${escapeHTML(name)}</h2>
+ <div class="pay-row"><span>Basic Salary</span><span>${money(basic)}</span></div>
+ <div class="pay-row"><span>House Rent (20%)</span><span>${money(house)}</span></div>
+ <div class="pay-row"><span>Medical Allowance (10%)</span><span>${money(medical)}</span></div>
+ <div class="pay-row"><span>Transport Allowance (5%)</span><span>${money(transport)}</span></div>
+ <div class="pay-row"><span>Overtime (${hours} hours)</span><span>${money(overtime)}</span></div>
+ <div class="pay-row"><span>Gross Salary</span><span>${money(gross)}</span></div>
+ <div class="pay-row tax"><span>Tax (${rate * 100}%)</span><span>${money(tax)}</span></div>
+ <div class="pay-row net"><span>Net Salary</span><span>${money(net)}</span></div>
+ <button class="print" type="button" onclick="window.print()">Print Payslip</button>`;
+        payslip.hidden = false;
+        payslip.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+      function escapeHTML(text) {
+        return text.replace(
+          /[&<>"']/g,
+          (char) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[char],
+        );
+      }
+    </script>
   </body>
 </html>

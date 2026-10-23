@@ -2,29 +2,255 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="theme-color" content="#0f766e" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Electricity Billing</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Smart Electricity Billing System</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #e0f2fe;
+        padding: 20px;
+      }
+      .pg {
+        max-width: 500px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 20px;
+        box-shadow: 0 0 10px #0000001a;
+      }
+      h2 {
+        text-align: center;
+        color: #0284c7;
+      }
+      .form {
+        margin-bottom: 15px;
+      }
+      label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+      input[type="text"],
+      input[type="number"] {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+      }
+      .error {
+        color: red;
+        font-size: 14px;
+      }
+      .warn {
+        color: #b91c1c;
+        font-weight: bold;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        background: #38bdf8;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #0369a1;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 10px;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 6px;
+        text-align: left;
+        font-size: 13px;
+      }
+      .summary {
+        margin-top: 20px;
+        padding: 15px;
+        background: #e0f2fe;
+        border-radius: 8px;
+        display: none;
+      }
+    </style>
   </head>
   <body>
-    <main class="container">
-      <h1>Smart Electricity Billing</h1>
-      <p class="muted">
-        Progressive unit slabs · VAT 15% · Service charge Tk 100
-      </p>
-      <label
-        >Electricity units used<input
-          id="units"
+    <div class="pg">
+      <h2>Smart Electricity Billing</h2>
+
+      <div class="form">
+        <label for="custName">Customer Name:</label>
+        <input type="text" id="custName" placeholder="Enter customer name" />
+        <span class="error" id="nameMsg"></span>
+      </div>
+
+      <div class="form">
+        <label for="units">Units Consumed (kWh):</label>
+        <input
           type="number"
+          id="units"
           min="0"
           step="1"
-          value="50"
-          onkeyup="calculateBill()"
-      /></label>
-      <button onclick="calculateBill()">Generate Bill</button>
-      <section id="bill" class="result" aria-live="polite"></section>
-    </main>
-    <script src="script.js"></script>
+          inputmode="numeric"
+          oninput="checkUsage()"
+        />
+        <span id="unitMsg" class="error"></span>
+      </div>
+
+      <div class="form">
+        <label style="display: inline; font-weight: normal">
+          <input
+            type="checkbox"
+            id="showSlab"
+            checked
+            onchange="toggleSlab()"
+          />
+          Show slab-wise details
+        </label>
+      </div>
+
+      <button type="button" onclick="generateBill()">Generate Bill</button>
+
+      <div id="summaryBox" class="summary">
+        <h3>Electricity Bill</h3>
+        <p id="sumName"></p>
+        <div id="slabBox"></div>
+        <p id="sumEnergy"></p>
+        <p id="sumVat"></p>
+        <p id="sumService"></p>
+        <p id="sumTotal"></p>
+        <p id="sumWarn" class="warn"></p>
+      </div>
+    </div>
+
+    <script>
+      const VAT_RATE = 0.15;
+      const SERVICE_CHARGE = 100;
+
+      const slabs = [
+        { from: 0, to: 100, rate: 5, label: "1 - 100" },
+        { from: 100, to: 200, rate: 7, label: "101 - 200" },
+        { from: 200, to: 300, rate: 9, label: "201 - 300" },
+        { from: 300, to: Infinity, rate: 12, label: "Above 300" },
+      ];
+
+      function checkName() {
+        const name = document.getElementById("custName").value.trim();
+        const msg = document.getElementById("nameMsg");
+        msg.textContent =
+          name && !/^[A-Za-z ]+$/.test(name)
+            ? "Use letters and spaces only."
+            : "";
+      }
+
+      function checkUsage() {
+        const input = document.getElementById("units");
+        const units = Number(input.value);
+        const msg = document.getElementById("unitMsg");
+
+        if (input.value !== "" && (!Number.isInteger(units) || units < 0)) {
+          msg.textContent = "Enter a non-negative whole number.";
+        } else if (units > 300) {
+          msg.textContent = "Warning: usage exceeds 300 units!";
+        } else {
+          msg.textContent = "";
+        }
+      }
+
+      function calculateBill(units) {
+        let energy = 0;
+        const rows = [];
+
+        slabs.forEach(function (slab) {
+          const used = Math.max(0, Math.min(units, slab.to) - slab.from);
+          const cost = used * slab.rate;
+          energy += cost;
+          rows.push({
+            label: slab.label,
+            used: used,
+            rate: slab.rate,
+            cost: cost,
+          });
+        });
+
+        const vat = energy * VAT_RATE;
+        const total = energy + vat + SERVICE_CHARGE;
+
+        return { rows: rows, energy: energy, vat: vat, total: total };
+      }
+
+      function toggleSlab() {
+        const show = document.getElementById("showSlab").checked;
+        document.getElementById("slabBox").style.display = show
+          ? "block"
+          : "none";
+      }
+
+      document.getElementById("custName").addEventListener("input", checkName);
+
+      function generateBill() {
+        const name = document.getElementById("custName").value.trim();
+        const unitInput = document.getElementById("units").value;
+        const units = Number(unitInput);
+
+        if (name === "" || !/^[A-Za-z ]+$/.test(name)) {
+          alert("Customer name must contain letters and spaces only.");
+          document.getElementById("custName").focus();
+          return;
+        }
+
+        if (
+          unitInput === "" ||
+          !Number.isFinite(units) ||
+          !Number.isInteger(units) ||
+          units < 0
+        ) {
+          alert("Bill units must be a non-negative whole number.");
+          document.getElementById("units").focus();
+          return;
+        }
+
+        const data = calculateBill(units);
+        let table =
+          "<table><tr><th>Slab</th><th>Units</th><th>Rate</th><th>Cost</th></tr>";
+
+        data.rows.forEach(function (row) {
+          table +=
+            "<tr><td>" +
+            row.label +
+            "</td><td>" +
+            row.used +
+            "</td><td>Tk " +
+            row.rate +
+            "</td><td>Tk " +
+            row.cost.toFixed(2) +
+            "</td></tr>";
+        });
+        table += "</table>";
+
+        document.getElementById("sumName").textContent =
+          "Customer: " + name + " (" + units + " units)";
+        document.getElementById("slabBox").innerHTML = table;
+        document.getElementById("sumEnergy").textContent =
+          "Energy Cost: Tk " + data.energy.toFixed(2);
+        document.getElementById("sumVat").textContent =
+          "VAT (15%): Tk " + data.vat.toFixed(2);
+        document.getElementById("sumService").textContent =
+          "Service Charge: Tk " + SERVICE_CHARGE.toFixed(2);
+        document.getElementById("sumTotal").textContent =
+          "Total Bill: Tk " + data.total.toFixed(2);
+        document.getElementById("sumWarn").textContent =
+          units > 300 ? "Warning: usage exceeds 300 units!" : "";
+
+        toggleSlab();
+        document.getElementById("summaryBox").style.display = "block";
+      }
+    </script>
   </body>
 </html>

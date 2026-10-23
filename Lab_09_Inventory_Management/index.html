@@ -2,50 +2,175 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="theme-color" content="#4d7c0f" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Inventory Management</title>
-    <link rel="stylesheet" href="style.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 28px 14px;
+        background: #f4f6f8;
+        color: #243042;
+        font:
+          15px/1.5 Arial,
+          sans-serif;
+      }
+      main {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 28px;
+        background: #fff;
+        border: 1px solid #e0e5eb;
+        border-radius: 12px;
+      }
+      h1 {
+        margin: 0 0 22px;
+        color: #344b68;
+        font-size: 28px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+      label {
+        display: block;
+        margin-bottom: 14px;
+        font-weight: 600;
+      }
+      input {
+        display: block;
+        width: 100%;
+        margin-top: 6px;
+        padding: 11px;
+        border: 1px solid #ccd4df;
+        border-radius: 7px;
+        font: inherit;
+      }
+      input:focus {
+        outline: 2px solid #dce8d0;
+        border-color: #64804a;
+      }
+      button {
+        padding: 10px 14px;
+        border: 0;
+        border-radius: 7px;
+        background: #597647;
+        color: #fff;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #476238;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin: 22px 0;
+      }
+      .stat {
+        padding: 15px;
+        border: 1px solid #e0e5eb;
+        border-radius: 8px;
+        background: #fafbfd;
+      }
+      .stat strong {
+        display: block;
+        margin-top: 6px;
+        color: #344b68;
+        font-size: 19px;
+      }
+      .table-wrap {
+        overflow-x: auto;
+        border: 1px solid #e0e5eb;
+        border-radius: 8px;
+      }
+      table {
+        width: 100%;
+        min-width: 760px;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 11px 12px;
+        border-bottom: 1px solid #e0e5eb;
+        text-align: left;
+        white-space: nowrap;
+      }
+      th {
+        background: #f0f3f6;
+        color: #344b68;
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      .remove {
+        background: #e9edf2;
+        color: #344054;
+      }
+      .remove:hover {
+        background: #dce3eb;
+      }
+      .empty {
+        text-align: center;
+        color: #687386;
+      }
+      @media (max-width: 650px) {
+        main {
+          padding: 20px 15px;
+        }
+        .grid,
+        .stats {
+          grid-template-columns: 1fr;
+        }
+        h1 {
+          font-size: 24px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <main class="container">
+    <main>
       <h1>Inventory Management</h1>
+
       <form id="inventoryForm">
-        <label>Product name<input id="product" required /></label
-        ><label
-          >Purchase price per unit (Tk)<input
-            id="purchase"
-            type="number"
-            min="0"
-            step="0.01"
-            required /></label
-        ><label
-          >Selling price per unit (Tk)<input
-            id="selling"
-            type="number"
-            min="0"
-            step="0.01"
-            required /></label
-        ><label
-          >Quantity<input
-            id="quantity"
-            type="number"
-            min="0"
-            step="1"
-            required /></label
-        ><button>Add Product</button>
+        <div class="grid">
+          <label
+            >Product Name
+            <input id="product" type="text" required />
+          </label>
+          <label
+            >Purchase Price per Unit (Tk)
+            <input id="purchase" type="number" min="0" step="0.01" required />
+          </label>
+          <label
+            >Selling Price per Unit (Tk)
+            <input id="selling" type="number" min="0" step="0.01" required />
+          </label>
+          <label
+            >Quantity
+            <input id="quantity" type="number" min="0" step="1" required />
+          </label>
+        </div>
+        <button type="submit">Add Product</button>
       </form>
-      <div class="grid stats">
+
+      <div class="stats">
         <div class="stat">
-          Stock value<strong id="stockValue">Tk 0.00</strong>
+          Stock Value<strong id="stockValue">Tk 0.00</strong>
         </div>
         <div class="stat">
-          Expected revenue<strong id="revenue">Tk 0.00</strong>
+          Expected Revenue<strong id="revenue">Tk 0.00</strong>
         </div>
         <div class="stat">
-          Expected profit<strong id="profit">Tk 0.00</strong>
+          Expected Profit<strong id="profit">Tk 0.00</strong>
         </div>
       </div>
+
       <div class="table-wrap">
         <table>
           <thead>
@@ -54,16 +179,127 @@
               <th>Purchase</th>
               <th>Selling</th>
               <th>Qty</th>
-              <th>Stock value</th>
+              <th>Stock Value</th>
               <th>Revenue</th>
               <th>Profit</th>
-              <th></th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody id="inventory"></tbody>
         </table>
       </div>
     </main>
-    <script src="script.js"></script>
+
+    <script>
+      let products = [];
+      let nextId = 1;
+
+      const form = document.getElementById("inventoryForm");
+      const inventoryBody = document.getElementById("inventory");
+
+      function money(amount) {
+        return (
+          "Tk " +
+          amount.toLocaleString("en-BD", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        );
+      }
+
+      function escapeHTML(value) {
+        return value.replace(
+          /[&<>"']/g,
+          (character) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[character],
+        );
+      }
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const name = document.getElementById("product").value.trim();
+        const purchase = Number(document.getElementById("purchase").value);
+        const selling = Number(document.getElementById("selling").value);
+        const quantity = Number(document.getElementById("quantity").value);
+
+        if (
+          !name ||
+          !Number.isFinite(purchase) ||
+          purchase < 0 ||
+          !Number.isFinite(selling) ||
+          selling < 0 ||
+          !Number.isInteger(quantity) ||
+          quantity < 0
+        ) {
+          alert("Please enter valid product details.");
+          return;
+        }
+
+        products.push({ id: nextId++, name, purchase, selling, quantity });
+        renderInventory();
+        form.reset();
+      });
+
+      function removeProduct(id) {
+        products = products.filter((product) => product.id !== id);
+        renderInventory();
+      }
+
+      function renderInventory() {
+        if (products.length === 0) {
+          inventoryBody.innerHTML =
+            '<tr><td colspan="8" class="empty">No products added.</td></tr>';
+        } else {
+          inventoryBody.innerHTML = products
+            .map((product) => {
+              const stockValue = product.purchase * product.quantity;
+              const revenue = product.selling * product.quantity;
+              const profit =
+                (product.selling - product.purchase) * product.quantity;
+
+              return `
+            <tr>
+              <td>${escapeHTML(product.name)}</td>
+              <td>${money(product.purchase)}</td>
+              <td>${money(product.selling)}</td>
+              <td>${product.quantity}</td>
+              <td>${money(stockValue)}</td>
+              <td>${money(revenue)}</td>
+              <td>${money(profit)}</td>
+              <td><button class="remove" type="button" onclick="removeProduct(${product.id})">Remove</button></td>
+            </tr>
+          `;
+            })
+            .join("");
+        }
+
+        const stockValue = products.reduce(
+          (sum, product) => sum + product.purchase * product.quantity,
+          0,
+        );
+        const revenue = products.reduce(
+          (sum, product) => sum + product.selling * product.quantity,
+          0,
+        );
+        const profit = products.reduce(
+          (sum, product) =>
+            sum + (product.selling - product.purchase) * product.quantity,
+          0,
+        );
+
+        document.getElementById("stockValue").textContent = money(stockValue);
+        document.getElementById("revenue").textContent = money(revenue);
+        document.getElementById("profit").textContent = money(profit);
+      }
+
+      renderInventory();
+    </script>
   </body>
 </html>

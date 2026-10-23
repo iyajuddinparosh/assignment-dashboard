@@ -2,43 +2,267 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="theme-color" content="#c2410c" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bus Ticket Reservation</title>
-    <link rel="stylesheet" href="style.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 28px 14px;
+        background: #f4f6f8;
+        color: #243042;
+        font:
+          15px/1.5 Arial,
+          sans-serif;
+      }
+      main {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 28px;
+        background: #fff;
+        border: 1px solid #e0e5eb;
+        border-radius: 12px;
+      }
+      h1 {
+        margin: 0 0 22px;
+        color: #344b68;
+        font-size: 28px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+      label {
+        display: block;
+        margin-bottom: 14px;
+        font-weight: 600;
+      }
+      input,
+      select {
+        display: block;
+        width: 100%;
+        margin-top: 6px;
+        padding: 11px;
+        border: 1px solid #ccd4df;
+        border-radius: 7px;
+        background: #fff;
+        font: inherit;
+      }
+      input:focus,
+      select:focus {
+        outline: 2px solid #d7e3f1;
+        border-color: #54749a;
+      }
+      button {
+        padding: 11px 16px;
+        border: 0;
+        border-radius: 7px;
+        background: #42658d;
+        color: white;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #345476;
+      }
+      .available {
+        margin: 20px 0 0;
+        padding: 12px 14px;
+        background: #f0f3f7;
+        border-radius: 7px;
+      }
+      .ticket {
+        margin-top: 20px;
+        padding: 20px;
+        border: 1px solid #dce3eb;
+        border-radius: 9px;
+        background: #fafbfd;
+      }
+      .ticket[hidden] {
+        display: none;
+      }
+      .ticket h2 {
+        margin-top: 0;
+        color: #344b68;
+      }
+      .ticket-total {
+        font-size: 20px;
+        font-weight: 700;
+        color: #344b68;
+      }
+      .print-button {
+        margin-top: 10px;
+      }
+      @media (max-width: 560px) {
+        main {
+          padding: 20px 15px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+          gap: 0;
+        }
+        h1 {
+          font-size: 24px;
+        }
+      }
+      @media print {
+        body {
+          padding: 0;
+          background: white;
+        }
+        main {
+          max-width: none;
+          padding: 0;
+          border: 0;
+        }
+        form,
+        .available,
+        .print-button {
+          display: none !important;
+        }
+        .ticket {
+          border: 0;
+          padding: 0;
+          background: white;
+        }
+      }
+    </style>
   </head>
   <body>
-    <main class="container">
+    <main>
       <h1>Bus Ticket Reservation</h1>
+
       <form id="bookingForm">
-        <label>Passenger name<input id="passenger" required /></label
-        ><label
-          >Destination<select id="destination">
-            <option value="500">Dhaka — Tk 500</option>
-            <option value="800">Chittagong — Tk 800</option>
-            <option value="700">Sylhet — Tk 700</option>
-            <option value="600">Rajshahi — Tk 600</option>
-          </select></label
-        ><label
-          >Number of seats<input
-            id="seats"
-            type="number"
-            min="1"
-            step="1"
-            value="1"
-            required /></label
-        ><label
-          >Passenger category<select id="category">
-            <option value="0">Regular — 0%</option>
-            <option value="50">Child — 50%</option>
-            <option value="15">Student — 15%</option>
-            <option value="20">Senior citizen — 20%</option>
-          </select></label
-        ><button>Book Tickets</button>
+        <label
+          >Passenger Name
+          <input id="passenger" type="text" required />
+        </label>
+
+        <div class="grid">
+          <label
+            >Destination
+            <select id="destination">
+              <option value="500">Dhaka — Tk 500</option>
+              <option value="800">Chittagong — Tk 800</option>
+              <option value="700">Sylhet — Tk 700</option>
+              <option value="600">Rajshahi — Tk 600</option>
+            </select>
+          </label>
+
+          <label
+            >Number of Seats
+            <input
+              id="seats"
+              type="number"
+              min="1"
+              step="1"
+              value="1"
+              required
+            />
+          </label>
+
+          <label
+            >Passenger Category
+            <select id="category">
+              <option value="0">Regular — 0% discount</option>
+              <option value="50">Child — 50% discount</option>
+              <option value="15">Student — 15% discount</option>
+              <option value="20">Senior Citizen — 20% discount</option>
+            </select>
+          </label>
+        </div>
+
+        <button type="submit">Book Tickets</button>
       </form>
-      <p>Available seats: <strong id="available">40 / 40</strong></p>
-      <section id="ticket" class="result" hidden></section>
+
+      <p class="available">
+        Available Seats: <strong id="available">40 / 40</strong>
+      </p>
+      <section id="ticket" class="ticket" hidden></section>
     </main>
-    <script src="script.js"></script>
+
+    <script>
+      let availableSeats = 40;
+
+      const form = document.getElementById("bookingForm");
+      const ticket = document.getElementById("ticket");
+      const availableDisplay = document.getElementById("available");
+
+      function formatMoney(amount) {
+        return (
+          "Tk " +
+          amount.toLocaleString("en-BD", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        );
+      }
+
+      function escapeHTML(value) {
+        return value.replace(
+          /[&<>"']/g,
+          (character) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[character],
+        );
+      }
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const name = document.getElementById("passenger").value.trim();
+        const destinationSelect = document.getElementById("destination");
+        const destination =
+          destinationSelect.options[destinationSelect.selectedIndex].text.split(
+            " — ",
+          )[0];
+        const fare = Number(destinationSelect.value);
+        const seats = Number(document.getElementById("seats").value);
+        const discountRate = Number(document.getElementById("category").value);
+
+        if (!name) {
+          alert("Please enter the passenger name.");
+          return;
+        }
+
+        if (!Number.isInteger(seats) || seats < 1) {
+          alert("Please enter a valid number of seats.");
+          return;
+        }
+
+        if (seats > availableSeats) {
+          alert("Not enough seats available.");
+          return;
+        }
+
+        const baseFare = fare * seats;
+        const discount = (baseFare * discountRate) / 100;
+        const totalFare = baseFare - discount;
+
+        availableSeats -= seats;
+        availableDisplay.textContent = availableSeats + " / 40";
+
+        ticket.innerHTML = `
+        <h2>Ticket Confirmation</h2>
+        <p><strong>Passenger:</strong> ${escapeHTML(name)}</p>
+        <p><strong>Destination:</strong> ${destination}</p>
+        <p><strong>Seats:</strong> ${seats}</p>
+        <p><strong>Base Fare:</strong> ${formatMoney(baseFare)}</p>
+        <p><strong>Discount (${discountRate}%):</strong> ${formatMoney(discount)}</p>
+        <p class="ticket-total">Total Fare: ${formatMoney(totalFare)}</p>
+        <button class="print-button" type="button" onclick="window.print()">Print Ticket</button>
+      `;
+        ticket.hidden = false;
+      });
+    </script>
   </body>
 </html>

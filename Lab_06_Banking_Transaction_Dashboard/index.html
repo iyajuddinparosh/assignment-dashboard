@@ -2,29 +2,199 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="theme-color" content="#047857" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Banking Dashboard</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Banking Transaction Dashboard</title>
+    <style>
+      :root {
+        --green: #047857;
+        --dark: #064e3b;
+        --light: #ecfdf5;
+        --text: #172033;
+        --muted: #69758a;
+        --line: #dfe7e5;
+        --red: #b42318;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 28px 15px;
+        font-family: Arial, sans-serif;
+        color: var(--text);
+        background: #f5f7f7;
+        line-height: 1.5;
+      }
+      .container {
+        max-width: 850px;
+        margin: auto;
+        padding: 26px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        box-shadow: 0 10px 30px #1028200d;
+      }
+      h1 {
+        margin: 0 0 7px;
+        color: var(--dark);
+        font-size: clamp(24px, 4vw, 32px);
+      }
+      h2 {
+        margin: 25px 0 12px;
+        font-size: 20px;
+      }
+      .muted {
+        margin: 0 0 20px;
+        color: var(--muted);
+      }
+      .balance {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 17px;
+        background: var(--light);
+        border: 1px solid #cce8dc;
+        border-radius: 10px;
+      }
+      .balance strong {
+        font-size: clamp(20px, 3vw, 27px);
+        color: var(--dark);
+      }
+      label {
+        display: block;
+        margin: 20px 0 7px;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #cfd9d6;
+        border-radius: 8px;
+        font: inherit;
+      }
+      input:focus {
+        outline: 3px solid #d8f3e7;
+        border-color: var(--green);
+      }
+      .actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 13px 0;
+      }
+      button {
+        padding: 11px 16px;
+        border: 0;
+        border-radius: 8px;
+        background: var(--green);
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      button:hover {
+        background: var(--dark);
+      }
+      .secondary {
+        background: #edf1ef;
+        color: #34413d;
+      }
+      .secondary:hover {
+        background: #dfe7e3;
+      }
+      #message {
+        min-height: 22px;
+        font-size: 14px;
+        color: var(--green);
+      }
+      #message.error {
+        color: var(--red);
+      }
+      .table-wrap {
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 11px 12px;
+        border-bottom: 1px solid var(--line);
+        white-space: nowrap;
+      }
+      th {
+        background: #f4f7f6;
+        color: #34413d;
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      tbody tr:hover {
+        background: #fafcfb;
+      }
+      @media (max-width: 520px) {
+        body {
+          padding: 14px 8px;
+        }
+        .container {
+          padding: 18px 13px;
+        }
+        .balance {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        th,
+        td {
+          padding: 9px;
+          font-size: 12px;
+        }
+      }
+      @media print {
+        body {
+          padding: 0;
+          background: #fff;
+        }
+        .container {
+          border: 0;
+          box-shadow: none;
+        }
+        .actions,
+        label,
+        input {
+          display: none !important;
+        }
+      }
+    </style>
   </head>
   <body>
     <main class="container">
       <h1>Banking Transaction Dashboard</h1>
-      <p class="muted">Demo account — stored in this browser only</p>
+      <p class="muted">
+        Demo account — transaction details are saved in this browser only.
+      </p>
       <div class="balance">
-        Current balance <strong id="balance">Tk 0.00</strong>
+        <span>Current Balance</span><strong id="balance">Tk 0.00</strong>
       </div>
-      <label
-        >Amount (Tk)<input
-          id="amount"
-          type="number"
-          min="0.01"
-          step="0.01"
-          onkeyup="if (event.key === 'Enter') deposit();"
-      /></label>
+      <label for="amount">Amount (Tk)</label>
+      <input
+        id="amount"
+        type="number"
+        min="0.01"
+        step="0.01"
+        placeholder="Enter amount"
+      />
       <div class="actions">
-        <button onclick="deposit()">Deposit</button
-        ><button class="secondary" onclick="withdraw()">Withdraw</button>
+        <button type="button" onclick="deposit()">Deposit</button>
+        <button type="button" class="secondary" onclick="withdraw()">
+          Withdraw
+        </button>
       </div>
       <p id="message" aria-live="polite"></p>
       <h2>Transaction History</h2>
@@ -41,8 +211,105 @@
           <tbody id="history"></tbody>
         </table>
       </div>
-      <button class="secondary" onclick="clearHistory()">Clear History</button>
+      <div class="actions">
+        <button type="button" class="secondary" onclick="clearHistory()">
+          Clear History
+        </button>
+      </div>
     </main>
-    <script src="script.js"></script>
+    <script>
+      const STORAGE_KEY = "lab6BankDemo";
+      let account = { balance: 0, history: [] };
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (
+          saved &&
+          Number.isFinite(saved.balance) &&
+          Array.isArray(saved.history)
+        )
+          account = saved;
+      } catch (error) {}
+      const $ = (id) => document.getElementById(id);
+      const money = (value) =>
+        "Tk " +
+        value.toLocaleString("en-BD", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+
+      function saveAccount() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(account));
+        } catch (error) {
+          $("message").textContent = "Could not save data in this browser.";
+        }
+      }
+      function render() {
+        $("balance").textContent = money(account.balance);
+        $("history").innerHTML =
+          account.history
+            .slice()
+            .reverse()
+            .map(
+              (item) =>
+                `<tr><td>${item.date}</td><td>${item.type}</td><td>${money(item.amount)}</td><td>${money(item.balance)}</td></tr>`,
+            )
+            .join("") || '<tr><td colspan="4">No transactions yet.</td></tr>';
+      }
+      function transact(type) {
+        const input = $("amount"),
+          amount = Number(input.value),
+          message = $("message");
+        message.classList.remove("error");
+        if (
+          input.value.trim() === "" ||
+          !Number.isFinite(amount) ||
+          amount <= 0
+        ) {
+          message.textContent = "Enter an amount greater than zero.";
+          message.classList.add("error");
+          return;
+        }
+        if (type === "Withdraw" && amount > account.balance) {
+          message.textContent =
+            "Insufficient balance. You cannot withdraw more than your balance.";
+          message.classList.add("error");
+          return;
+        }
+        account.balance = Number(
+          (account.balance + (type === "Deposit" ? amount : -amount)).toFixed(
+            2,
+          ),
+        );
+        account.history.push({
+          date: new Date().toLocaleString(),
+          type,
+          amount,
+          balance: account.balance,
+        });
+        saveAccount();
+        render();
+        message.textContent = type + " successful.";
+        input.value = "";
+      }
+      function deposit() {
+        transact("Deposit");
+      }
+      function withdraw() {
+        transact("Withdraw");
+      }
+      function clearHistory() {
+        account.history = [];
+        saveAccount();
+        render();
+        $("message").classList.remove("error");
+        $("message").textContent =
+          "Transaction history cleared. Your balance has not changed.";
+      }
+      $("amount").addEventListener("keydown", (event) => {
+        if (event.key === "Enter") deposit();
+      });
+      render();
+    </script>
   </body>
 </html>

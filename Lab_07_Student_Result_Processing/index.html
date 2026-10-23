@@ -2,25 +2,285 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="theme-color" content="#4338ca" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Student Results</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Student Result Processing</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 28px 14px;
+        background: #f4f6f8;
+        color: #243042;
+        font:
+          15px/1.5 Arial,
+          sans-serif;
+      }
+      main {
+        max-width: 850px;
+        margin: 0 auto;
+        padding: 28px;
+        background: #fff;
+        border: 1px solid #e0e5eb;
+        border-radius: 12px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        color: #344b68;
+        font-size: 28px;
+      }
+      .intro {
+        margin: 0 0 22px;
+        color: #687386;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+      label {
+        display: block;
+        margin-bottom: 14px;
+        font-weight: 600;
+      }
+      input {
+        display: block;
+        width: 100%;
+        margin-top: 6px;
+        padding: 11px;
+        border: 1px solid #ccd4df;
+        border-radius: 7px;
+        background: #fff;
+        font: inherit;
+      }
+      input:focus {
+        outline: 2px solid #d7e3f1;
+        border-color: #54749a;
+      }
+      button {
+        padding: 11px 16px;
+        border: 0;
+        border-radius: 7px;
+        background: #42658d;
+        color: white;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+        margin: 5px 8px 5px 0;
+      }
+      button:hover {
+        background: #345476;
+      }
+      .secondary {
+        background: #e9edf2;
+        color: #344054;
+      }
+      .secondary:hover {
+        background: #dce3eb;
+      }
+      .result {
+        margin-top: 22px;
+        padding: 20px;
+        border: 1px solid #dce3eb;
+        border-radius: 9px;
+        background: #fafbfd;
+      }
+      .result[hidden] {
+        display: none;
+      }
+      .table-wrap {
+        overflow-x: auto;
+        margin: 14px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+      }
+      th,
+      td {
+        padding: 10px 12px;
+        border: 1px solid #dce3eb;
+        text-align: left;
+      }
+      th {
+        background: #edf1f6;
+        color: #344b68;
+      }
+      .summary {
+        margin: 8px 0;
+      }
+      .cgpa {
+        font-size: 20px;
+        font-weight: 700;
+        color: #344b68;
+      }
+      @media (max-width: 560px) {
+        main {
+          padding: 20px 15px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+          gap: 0;
+        }
+        h1 {
+          font-size: 24px;
+        }
+      }
+      @media print {
+        body {
+          padding: 0;
+          background: white;
+        }
+        main {
+          max-width: none;
+          padding: 0;
+          border: 0;
+        }
+        form,
+        .print-button,
+        .intro {
+          display: none !important;
+        }
+        .result {
+          border: 0;
+          padding: 0;
+          background: white;
+        }
+      }
+    </style>
   </head>
   <body>
-    <main class="container">
+    <main>
       <h1>Student Result Processing</h1>
+      <p class="intro">
+        Enter student details and marks to calculate the result.
+      </p>
+
       <form id="resultForm">
-        <label>Student Name<input id="student" required /></label
-        ><label>Student ID<input id="sid" required /></label>
+        <div class="grid">
+          <label
+            >Student Name
+            <input id="student" type="text" required />
+          </label>
+          <label
+            >Student ID
+            <input id="sid" type="text" required />
+          </label>
+        </div>
         <div class="grid" id="marks"></div>
-        <button>Calculate Result</button>
+        <button type="submit">Calculate Result</button>
       </form>
+
       <section id="result" class="result" hidden></section>
-      <button class="secondary" onclick="window.print()">
+      <button
+        class="secondary print-button"
+        type="button"
+        onclick="window.print()"
+      >
         Print Marksheet
       </button>
     </main>
-    <script src="script.js"></script>
+
+    <script>
+      const subjects = [
+        "Java",
+        "Database",
+        "Networking",
+        "AI",
+        "Web Engineering",
+      ];
+      const marksBox = document.getElementById("marks");
+      const form = document.getElementById("resultForm");
+      const result = document.getElementById("result");
+
+      // Create an input for each subject.
+      marksBox.innerHTML = subjects
+        .map(
+          (subject, index) => `
+      <label>${subject} Marks (0–100)
+        <input id="mark${index}" type="number" min="0" max="100" value="75" required>
+      </label>
+    `,
+        )
+        .join("");
+
+      function getGrade(mark) {
+        if (mark >= 80) return ["A+", 4.0];
+        if (mark >= 75) return ["A", 3.75];
+        if (mark >= 70) return ["A-", 3.5];
+        if (mark >= 65) return ["B+", 3.25];
+        if (mark >= 60) return ["B", 3.0];
+        if (mark >= 50) return ["C", 2.0];
+        return ["F", 0.0];
+      }
+
+      function escapeHTML(value) {
+        return value.replace(
+          /[&<>"']/g,
+          (character) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[character],
+        );
+      }
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const student = document.getElementById("student").value.trim();
+        const studentId = document.getElementById("sid").value.trim();
+        const marks = subjects.map((subject, index) => ({
+          subject,
+          mark: Number(document.getElementById("mark" + index).value),
+        }));
+
+        if (
+          !student ||
+          !studentId ||
+          marks.some(
+            (item) =>
+              !Number.isFinite(item.mark) || item.mark < 0 || item.mark > 100,
+          )
+        ) {
+          alert("Enter the student details and marks from 0 to 100.");
+          return;
+        }
+
+        const total = marks.reduce((sum, item) => sum + item.mark, 0);
+        const percentage = (total / 500) * 100;
+        const cgpa =
+          marks.reduce((sum, item) => sum + getGrade(item.mark)[1], 0) /
+          subjects.length;
+
+        const rows = marks
+          .map((item) => {
+            const [grade, gpa] = getGrade(item.mark);
+            return `<tr><td>${item.subject}</td><td>${item.mark}</td><td>${grade}</td><td>${gpa.toFixed(2)}</td></tr>`;
+          })
+          .join("");
+
+        result.innerHTML = `
+        <h2>Marksheet</h2>
+        <p><strong>Student Name:</strong> ${escapeHTML(student)}</p>
+        <p><strong>Student ID:</strong> ${escapeHTML(studentId)}</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Subject</th><th>Marks</th><th>Grade</th><th>GPA</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+        <p class="summary"><strong>Total:</strong> ${total}/500</p>
+        <p class="summary"><strong>Percentage:</strong> ${percentage.toFixed(2)}%</p>
+        <p class="cgpa">CGPA: ${cgpa.toFixed(2)}/4.00</p>
+      `;
+        result.hidden = false;
+      });
+    </script>
   </body>
 </html>

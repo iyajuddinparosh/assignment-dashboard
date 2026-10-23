@@ -2,16 +2,188 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="theme-color" content="#b45309" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Restaurant POS</title>
-    <link rel="stylesheet" href="style.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 28px 14px;
+        background: #f4f6f8;
+        color: #243042;
+        font:
+          15px/1.5 Arial,
+          sans-serif;
+      }
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 28px;
+        background: #fff;
+        border: 1px solid #e0e5eb;
+        border-radius: 12px;
+      }
+      h1,
+      h2 {
+        color: #344b68;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+      h2 {
+        margin: 24px 0 12px;
+        font-size: 21px;
+      }
+      .muted {
+        margin-top: 0;
+        color: #687386;
+      }
+      .menu {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        margin: 20px 0;
+      }
+      .menu-item {
+        padding: 15px;
+        border: 1px solid #e0e5eb;
+        border-radius: 8px;
+        background: #fafbfd;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .menu-item strong {
+        color: #344b68;
+      }
+      .menu-item span {
+        color: #597647;
+        font-weight: 700;
+      }
+      button {
+        padding: 10px 13px;
+        border: 0;
+        border-radius: 7px;
+        background: #597647;
+        color: white;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #476238;
+      }
+      .secondary {
+        background: #e9edf2;
+        color: #344054;
+      }
+      .secondary:hover {
+        background: #dce3eb;
+      }
+      .table-wrap {
+        overflow-x: auto;
+        border: 1px solid #e0e5eb;
+        border-radius: 8px;
+      }
+      table {
+        width: 100%;
+        min-width: 540px;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 11px 12px;
+        border-bottom: 1px solid #e0e5eb;
+        text-align: left;
+      }
+      th {
+        background: #f0f3f6;
+        color: #344b68;
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      td input {
+        width: 70px;
+        padding: 6px;
+        border: 1px solid #ccd4df;
+        border-radius: 5px;
+        font: inherit;
+      }
+      .totals,
+      .invoice {
+        margin-top: 20px;
+        padding: 18px;
+        border: 1px solid #e0e5eb;
+        border-radius: 8px;
+        background: #fafbfd;
+      }
+      .grand-total {
+        font-size: 20px;
+        font-weight: 700;
+        color: #344b68;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 14px;
+      }
+      .invoice[hidden] {
+        display: none;
+      }
+      .invoice h2 {
+        margin-top: 0;
+      }
+      .empty {
+        color: #687386;
+        text-align: center;
+      }
+      @media (max-width: 560px) {
+        main {
+          padding: 20px 15px;
+        }
+        h1 {
+          font-size: 24px;
+        }
+      }
+      @media print {
+        body {
+          padding: 0;
+          background: white;
+        }
+        main {
+          max-width: none;
+          padding: 0;
+          border: 0;
+        }
+        .menu,
+        .actions,
+        .remove,
+        .quantity-input {
+          display: none !important;
+        }
+        .invoice {
+          border: 0;
+          padding: 0;
+          background: white;
+        }
+        .invoice[hidden] {
+          display: none !important;
+        }
+      }
+    </style>
   </head>
   <body>
-    <main class="container">
+    <main>
       <h1>Restaurant POS</h1>
       <p class="muted">Menu items · VAT 15% · Service charge 5%</p>
-      <div id="menu" class="products"></div>
+
+      <div id="menu" class="menu"></div>
+
       <h2>Current Order</h2>
       <div class="table-wrap">
         <table>
@@ -21,19 +193,170 @@
               <th>Price</th>
               <th>Qty</th>
               <th>Total</th>
-              <th></th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody id="order"></tbody>
         </table>
       </div>
-      <section id="totals" class="result"></section>
+
+      <section id="totals" class="totals"></section>
       <div class="actions">
-        <button onclick="makeInvoice()">Generate Invoice</button
-        ><button class="secondary" onclick="clearOrder()">Clear Order</button>
+        <button type="button" onclick="makeInvoice()">Generate Invoice</button>
+        <button type="button" class="secondary" onclick="clearOrder()">
+          Clear Order
+        </button>
       </div>
-      <section id="invoice" class="result" hidden></section>
+      <section id="invoice" class="invoice" hidden></section>
     </main>
-    <script src="script.js"></script>
+
+    <script>
+      const menuItems = [
+        ["Burger", 250],
+        ["Pizza", 800],
+        ["Fried Rice", 350],
+        ["Coffee", 120],
+        ["Soft Drink", 50],
+      ];
+
+      let order = {};
+
+      const menu = document.getElementById("menu");
+      const orderBody = document.getElementById("order");
+      const totalsBox = document.getElementById("totals");
+      const invoice = document.getElementById("invoice");
+
+      function money(amount) {
+        return (
+          "Tk " +
+          amount.toLocaleString("en-BD", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        );
+      }
+
+      function renderMenu() {
+        menu.innerHTML = menuItems
+          .map(
+            ([name, price]) => `
+        <article class="menu-item">
+          <strong>${name}</strong>
+          <span>${money(price)}</span>
+          <button type="button" onclick="addItem('${name}')">Add Item</button>
+        </article>
+      `,
+          )
+          .join("");
+      }
+
+      function addItem(name) {
+        order[name] = (order[name] || 0) + 1;
+        invoice.hidden = true;
+        renderOrder();
+      }
+
+      function removeItem(name) {
+        delete order[name];
+        invoice.hidden = true;
+        renderOrder();
+      }
+
+      function changeQuantity(name, value) {
+        const quantity = Math.max(0, Math.floor(Number(value) || 0));
+        if (quantity === 0) {
+          delete order[name];
+        } else {
+          order[name] = quantity;
+        }
+        invoice.hidden = true;
+        renderOrder();
+      }
+
+      function calculateTotals() {
+        const subtotal = Object.entries(order).reduce(
+          (sum, [name, quantity]) => {
+            const item = menuItems.find((menuItem) => menuItem[0] === name);
+            return sum + quantity * item[1];
+          },
+          0,
+        );
+
+        const vat = subtotal * 0.15;
+        const service = subtotal * 0.05;
+        return { subtotal, vat, service, total: subtotal + vat + service };
+      }
+
+      function renderOrder() {
+        if (Object.keys(order).length === 0) {
+          orderBody.innerHTML =
+            '<tr><td colspan="5" class="empty">Order is empty.</td></tr>';
+        } else {
+          orderBody.innerHTML = Object.entries(order)
+            .map(([name, quantity]) => {
+              const price = menuItems.find((item) => item[0] === name)[1];
+              return `
+            <tr>
+              <td>${name}</td>
+              <td>${money(price)}</td>
+              <td><input class="quantity-input" type="number" min="0" step="1" value="${quantity}" aria-label="Quantity for ${name}" onchange="changeQuantity('${name}', this.value)"></td>
+              <td>${money(price * quantity)}</td>
+              <td><button class="secondary remove" type="button" onclick="removeItem('${name}')">Remove</button></td>
+            </tr>
+          `;
+            })
+            .join("");
+        }
+
+        const totals = calculateTotals();
+        totalsBox.innerHTML = `
+        <p>Subtotal: ${money(totals.subtotal)}</p>
+        <p>VAT (15%): ${money(totals.vat)}</p>
+        <p>Service Charge (5%): ${money(totals.service)}</p>
+        <p class="grand-total">Grand Total: ${money(totals.total)}</p>
+      `;
+      }
+
+      function makeInvoice() {
+        if (Object.keys(order).length === 0) {
+          alert("Please add at least one item.");
+          return;
+        }
+
+        const totals = calculateTotals();
+        const rows = Object.entries(order)
+          .map(([name, quantity]) => {
+            const price = menuItems.find((item) => item[0] === name)[1];
+            return `<tr><td>${name}</td><td>${money(price)}</td><td>${quantity}</td><td>${money(price * quantity)}</td></tr>`;
+          })
+          .join("");
+
+        invoice.innerHTML = `
+        <h2>Restaurant Invoice</h2>
+        <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Item</th><th>Price</th><th>Qty</th><th>Total</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+        <p>Subtotal: ${money(totals.subtotal)}</p>
+        <p>VAT (15%): ${money(totals.vat)}</p>
+        <p>Service Charge (5%): ${money(totals.service)}</p>
+        <p class="grand-total">Grand Total: ${money(totals.total)}</p>
+        <button class="actions" type="button" onclick="window.print()">Print Invoice</button>
+      `;
+        invoice.hidden = false;
+      }
+
+      function clearOrder() {
+        order = {};
+        invoice.hidden = true;
+        renderOrder();
+      }
+
+      renderMenu();
+      renderOrder();
+    </script>
   </body>
 </html>

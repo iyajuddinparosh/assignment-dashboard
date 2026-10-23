@@ -1,52 +1,325 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="theme-color" content="#be123c" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hospital Billing</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <main class="container">
-      <h1>Hospital Management Billing</h1>
-      <form id="hospitalForm">
-        <label>Patient name<input id="patient" required /></label>
-        <label
-          >Cabin type<select id="cabin">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hospital Billing</title>
+  <style>
+    :root {
+      --primary: #6d28d9;
+      --primary-dark: #4c1d95;
+      --soft: #ede9fe;
+      --page: #f5f0ff;
+      --text: #252033;
+      --muted: #6b6478;
+      --border: #e5dcef;
+      --white: #ffffff;
+      --danger: #b42318;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 28px 16px;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(135deg, #f5f0ff 0%, #e9ddff 50%, #f8f5ff 100%);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 28px;
+      background: linear-gradient(160deg, #ffffff 0%, #fdfbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 16px 40px #37205c1c;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      color: var(--primary-dark);
+      font-size: clamp(24px, 4vw, 32px);
+    }
+
+    .subtitle { margin: 0 0 24px; color: var(--muted); line-height: 1.5; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .full { grid-column: 1 / -1; }
+    label { font-weight: 700; font-size: 14px; }
+
+    input, select {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+    }
+
+    input:focus, select:focus { outline: 3px solid var(--soft); border-color: var(--primary); }
+    .hint { color: var(--muted); font-size: 12px; }
+
+    .field-error {
+      min-height: 0;
+      color: var(--danger);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .field-error:empty { display: none; }
+    .invalid { border-color: var(--danger); background: #fffafa; }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 13px 16px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--primary);
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s, transform .2s;
+    }
+    button:hover { background: var(--primary-dark); }
+    button:active { transform: scale(.99); }
+
+    .error {
+      margin-top: 16px;
+      padding: 11px 13px;
+      color: var(--danger);
+      background: #fff1f0;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .result {
+      margin-top: 24px;
+      padding: 22px;
+      background: linear-gradient(145deg, #f5f0ff, #ffffff);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .result h2 { margin: 0 0 6px; color: var(--primary-dark); }
+    .patient-line { color: var(--muted); margin: 0 0 18px; }
+    .bill-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .bill-row span:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+    .bill-row.total {
+      margin-top: 5px;
+      padding-top: 15px;
+      border-bottom: 0;
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    @media (max-width: 540px) {
+      body { padding: 16px 10px; }
+      .container { padding: 20px 16px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .full { grid-column: auto; }
+      .result { padding: 17px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>Hospital Billing</h1>
+    <p class="subtitle">Enter patient details and charges to generate a clear bill receipt.</p>
+
+    <form id="billingForm" novalidate>
+      <div class="form-grid">
+        <div class="field full">
+          <label for="patient">Patient Name</label>
+          <input id="patient" name="patient" type="text" placeholder="Enter patient name" autocomplete="name" required aria-describedby="patientError">
+          <span id="patientError" class="field-error"></span>
+        </div>
+
+        <div class="field">
+          <label for="cabin">Cabin Type</label>
+          <select id="cabin" name="cabin">
             <option value="1000">General — Tk 1,000/day</option>
             <option value="2000">Semi Deluxe — Tk 2,000/day</option>
             <option value="3500">Deluxe — Tk 3,500/day</option>
-          </select></label
-        >
-        <label
-          >Number of days<input
-            id="days"
-            type="number"
-            min="1"
-            step="1"
-            value="1"
-            required
-        /></label>
-        <label
-          >Medicine cost (Tk)<input
-            id="medicine"
-            type="number"
-            min="0"
-            value="0"
-            required
-        /></label>
-        <label
-          >Test cost (Tk)<input
-            id="tests"
-            type="number"
-            min="0"
-            value="0"
-            required /></label
-        ><button>Generate Receipt</button>
-      </form>
-      <section id="receipt" class="result" hidden></section>
-    </main>
-    <script src="script.js"></script>
-  </body>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="days">Number of Days</label>
+          <input id="days" name="days" type="number" min="1" step="1" value="1" required aria-describedby="daysError">
+          <span id="daysError" class="field-error"></span>
+        </div>
+
+        <div class="field">
+          <label for="medicine">Medicine Cost (Tk)</label>
+          <input id="medicine" name="medicine" type="number" min="0" step="any" placeholder="Enter medicine cost" required aria-describedby="medicineError">
+          <span id="medicineError" class="field-error"></span>
+        </div>
+
+        <div class="field">
+          <label for="tests">Test Cost (Tk)</label>
+          <input id="tests" name="tests" type="number" min="0" step="any" placeholder="Enter test cost" required aria-describedby="testsError">
+          <span id="testsError" class="field-error"></span>
+        </div>
+      </div>
+
+      <button type="submit">Generate Receipt</button>
+      <div id="error" class="error" role="alert" hidden></div>
+    </form>
+
+    <section id="receipt" class="result" aria-live="polite" hidden>
+      <h2>Hospital Bill Receipt</h2>
+      <p id="patientLine" class="patient-line"></p>
+      <div class="bill-row"><span>Cabin Charge</span><span id="cabinCharge"></span></div>
+      <div class="bill-row"><span>Medicine Cost</span><span id="medicineCost"></span></div>
+      <div class="bill-row"><span>Test Cost</span><span id="testCost"></span></div>
+      <div class="bill-row"><span>Subtotal</span><span id="subtotal"></span></div>
+      <div class="bill-row"><span>VAT (10%)</span><span id="vat"></span></div>
+      <div class="bill-row total"><span>Total Amount</span><span id="total"></span></div>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById("billingForm");
+    const receipt = document.getElementById("receipt");
+
+    const fields = {
+      patient: {
+        input: document.getElementById("patient"),
+        error: document.getElementById("patientError")
+      },
+      days: {
+        input: document.getElementById("days"),
+        error: document.getElementById("daysError")
+      },
+      medicine: {
+        input: document.getElementById("medicine"),
+        error: document.getElementById("medicineError")
+      },
+      tests: {
+        input: document.getElementById("tests"),
+        error: document.getElementById("testsError")
+      }
+    };
+
+    function money(amount) {
+      return "Tk " + amount.toLocaleString("en-BD", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function showFieldError(fieldName, message) {
+      const field = fields[fieldName];
+      field.error.textContent = message;
+      field.input.classList.toggle("invalid", Boolean(message));
+      field.input.setAttribute("aria-invalid", message ? "true" : "false");
+    }
+
+    function validatePatient(showError = true) {
+      const value = fields.patient.input.value.trim();
+      const valid = /^[A-Za-z]+(?:[ '-][A-Za-z]+)*$/.test(value);
+      showFieldError("patient", valid || !showError ? "" : "Name must use English letters only. Numbers are not allowed.");
+      return valid;
+    }
+
+    function validateDays(showError = true) {
+      const input = fields.days.input;
+      const value = input.value.trim();
+      const number = Number(value);
+      const valid = value !== "" && Number.isInteger(number) && number >= 1;
+      showFieldError("days", valid || !showError ? "" : "Enter a whole number of days (1 or more).");
+      return valid;
+    }
+
+    function validateCost(fieldName, showError = true) {
+      const input = fields[fieldName].input;
+      const value = input.value.trim();
+      const number = Number(value);
+      const valid = value !== "" && Number.isFinite(number) && number >= 0;
+      showFieldError(fieldName, valid || !showError ? "" : "This field is required. Enter a cost of 0 or more.");
+      return valid;
+    }
+
+    // Show the name error while the user types, and block digits immediately.
+    fields.patient.input.addEventListener("input", function () {
+      const input = fields.patient.input;
+      const original = input.value;
+      const cleaned = original.replace(/[0-9]/g, "");
+      if (cleaned !== original) {
+        input.value = cleaned;
+      }
+      validatePatient(true);
+      receipt.hidden = true;
+    });
+
+    fields.days.input.addEventListener("input", () => {
+      validateDays(true);
+      receipt.hidden = true;
+    });
+
+    fields.medicine.input.addEventListener("input", () => {
+      validateCost("medicine", true);
+      receipt.hidden = true;
+    });
+
+    fields.tests.input.addEventListener("input", () => {
+      validateCost("tests", true);
+      receipt.hidden = true;
+    });
+
+    document.getElementById("cabin").addEventListener("change", () => {
+      receipt.hidden = true;
+    });
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const validName = validatePatient(true);
+      const validDays = validateDays(true);
+      const validMedicine = validateCost("medicine", true);
+      const validTests = validateCost("tests", true);
+
+      if (!validName || !validDays || !validMedicine || !validTests) {
+        receipt.hidden = true;
+        const firstInvalid = Object.values(fields).find(field => field.input.classList.contains("invalid"));
+        if (firstInvalid) firstInvalid.input.focus();
+        return;
+      }
+
+      const patient = fields.patient.input.value.trim();
+      const cabinRate = Number(document.getElementById("cabin").value);
+      const days = Number(fields.days.input.value);
+      const medicine = Number(fields.medicine.input.value);
+      const tests = Number(fields.tests.input.value);
+
+      const cabinCharge = cabinRate * days;
+      const subtotalAmount = cabinCharge + medicine + tests;
+      const vatAmount = subtotalAmount * 0.10;
+      const totalAmount = subtotalAmount + vatAmount;
+
+      document.getElementById("patientLine").textContent = "Patient: " + patient;
+      document.getElementById("cabinCharge").textContent = money(cabinCharge);
+      document.getElementById("medicineCost").textContent = money(medicine);
+      document.getElementById("testCost").textContent = money(tests);
+      document.getElementById("subtotal").textContent = money(subtotalAmount);
+      document.getElementById("vat").textContent = money(vatAmount);
+      document.getElementById("total").textContent = money(totalAmount);
+
+      receipt.hidden = false;
+      receipt.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  </script>
+</body>
 </html>

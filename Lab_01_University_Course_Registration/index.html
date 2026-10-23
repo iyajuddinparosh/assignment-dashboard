@@ -4,191 +4,315 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>University Course Registration</title>
-    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f6fb;
+        color: #17233b;
+        padding: 20px;
+      }
+      .page {
+        max-width: 900px;
+        margin: auto;
+      }
+      .card {
+        background: rgb(247, 242, 242);
+        padding: 20px;
+        margin-bottom: 18px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px #0001;
+      }
+      h1,
+      h2 {
+        margin-top: 0;
+      }
+      label {
+        display: block;
+        margin: 12px 0 5px;
+        font-weight: bold;
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+      }
+      .course {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        margin: 8px 0;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+      .course span {
+        flex: 1;
+      }
+      button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 15px;
+        background: #3155d9;
+        color: white;
+        border: 0;
+        border-radius: 7px;
+        cursor: pointer;
+        font-size: 15px;
+      }
+      button:hover {
+        background: #2443b4;
+      }
+      .muted {
+        color: #718096;
+      }
+      .total {
+        background: #f3f6ff;
+        padding: 12px;
+        border-radius: 8px;
+      }
+      .error {
+        color: #b42318;
+      }
+      .success {
+        color: #147d58;
+      }
+      #summary {
+        display: none;
+      }
+      @media (min-width: 700px) {
+        .columns {
+          display: grid;
+          grid-template-columns: 1.4fr 1fr;
+          gap: 18px;
+          align-items: start;
+        }
+      }
+    </style>
   </head>
-
   <body>
-    <header class="topbar">
-      <div class="brand-mark">U</div>
-      <div>
-        <strong>University Portal</strong
-        ><span>Student services / Course registration</span>
-      </div>
-      <span class="semester">FALL 2026</span>
-    </header>
-    <main class="page">
-      <section class="intro">
-        <p class="eyebrow">ACADEMIC SERVICES</p>
-        <h1>Course registration</h1>
-        <p>
-          Select your courses and review your tuition summary before
-          registering.
+    <div class="page">
+      <header class="card">
+        <strong>University Portal</strong>
+        <p class="muted">Student services / Course registration · FALL 2026</p>
+        <h1>Course Registration</h1>
+        <p class="muted">
+          Select courses and review your tuition before registering.
         </p>
-      </section>
-      <div class="layout">
+      </header>
+
+      <div class="columns">
         <section class="card">
-          <div class="card-heading">
-            <div>
-              <h2>Student information</h2>
-              <p>Enter your details below.</p>
-            </div>
-            <span class="step">01</span>
-          </div>
-          <form id="registrationForm" onsubmit="return false;" novalidate>
-            <div class="field">
-              <label for="studentName">Student name</label
-              ><input
-                id="studentName"
-                type="text"
-                placeholder="e.g. Parosh"
-              /><small class="field-message"></small>
-            </div>
-            <div class="field">
-              <label for="studentId">Student ID</label
-              ><input
-                id="studentId"
-                type="text"
-                inputmode="numeric"
-                maxlength="10"
-                placeholder="Enter 10 digits"
-                onblur="validateStudentId()"
-              /><small id="idMessage" class="field-message"
-                >Use exactly 10 digits.</small
-              >
-            </div>
-            <div class="card-heading course-heading">
-              <div>
-                <h2>Choose courses</h2>
-                <p>Select one or more courses.</p>
-              </div>
-              <span class="step">02</span>
-            </div>
-            <div class="course-list">
-              <label class="course-option"
-                ><input
-                  type="checkbox"
-                  name="course"
-                  value="Java"
-                  data-credit="3"
-                  onchange="updateCredits()"
-                /><span class="course-icon">J</span
-                ><span class="course-name"
-                  ><strong>Java Programming</strong
-                  ><small>Core programming</small></span
-                ><span class="credits">3 credits</span></label
-              >
-              <label class="course-option"
-                ><input
-                  type="checkbox"
-                  name="course"
-                  value="Database"
-                  data-credit="3"
-                  onchange="updateCredits()"
-                /><span class="course-icon">DB</span
-                ><span class="course-name"
-                  ><strong>Database</strong><small>Data management</small></span
-                ><span class="credits">3 credits</span></label
-              >
-              <label class="course-option"
-                ><input
-                  type="checkbox"
-                  name="course"
-                  value="AI"
-                  data-credit="4"
-                  onchange="updateCredits()"
-                /><span class="course-icon">AI</span
-                ><span class="course-name"
-                  ><strong>Artificial Intelligence</strong
-                  ><small>Intelligent systems</small></span
-                ><span class="credits">4 credits</span></label
-              >
-              <label class="course-option"
-                ><input
-                  type="checkbox"
-                  name="course"
-                  value="Networking"
-                  data-credit="3"
-                  onchange="updateCredits()"
-                /><span class="course-icon">N</span
-                ><span class="course-name"
-                  ><strong>Networking</strong
-                  ><small>Computer networks</small></span
-                ><span class="credits">3 credits</span></label
-              >
-              <label class="course-option"
-                ><input
-                  type="checkbox"
-                  name="course"
-                  value="Web Engineering"
-                  data-credit="3"
-                  onchange="updateCredits()"
-                /><span class="course-icon">WEB</span
-                ><span class="course-name"
-                  ><strong>Web Engineering</strong
-                  ><small>Web application development</small></span
-                ><span class="credits">3 credits</span></label
-              >
-            </div>
-            <div class="form-footer">
-              <div>
-                <span class="muted-label">Selected credit hours</span
-                ><strong id="totalCredits" class="credit-number">0</strong>
-              </div>
-              <button
-                type="button"
-                class="primary-btn"
-                onclick="registerCourses()"
-              >
-                Register courses →
-              </button>
-            </div>
-            <p
-              id="formMessage"
-              class="form-message"
-              role="status"
-              aria-live="polite"
-            ></p>
-          </form>
-        </section>
-        <aside class="side-column">
-          <section class="card fee-card">
-            <p class="eyebrow">TUITION ESTIMATE</p>
-            <h2>Fee breakdown</h2>
-            <p class="side-description">
-              Tuition is calculated automatically from selected credits.
-            </p>
-            <div class="fee-row">
-              <span>Fee per credit</span><strong>Tk 3610</strong>
-            </div>
-            <div class="fee-row">
-              <span>Tuition fee</span
-              ><strong id="previewTuition">Tk 0.00</strong>
-            </div>
-            <div class="fee-row">
-              <span>Discount</span><strong id="previewDiscount">Tk 0.00</strong>
-            </div>
-            <div class="fee-total">
-              <span>Estimated payment</span
-              ><strong id="previewFinal">Tk 0.00</strong>
-            </div>
-            <p id="discountHint" class="discount-hint">
-              Select more than 12 credits to qualify for a 10% discount.
-            </p>
-          </section>
-          <section
-            id="summary"
-            class="card summary-card"
-            hidden
-            aria-live="polite"
-          ></section>
-          <p class="small-note">
-            Assumptions: Tk 3,610 per credit, 10% discount above 12 credits,
-            10-digit Student ID.
+          <h2>Student Information</h2>
+          <label for="studentName">Student Name</label>
+          <input type="text" id="studentName" placeholder="Enter your name" />
+
+          <label for="studentId">Student ID</label>
+          <input
+            type="text"
+            id="studentId"
+            maxlength="10"
+            placeholder="Enter 10 digits"
+            onblur="validateStudentId()"
+          />
+          <small id="idMessage" class="muted">Use exactly 10 digits.</small>
+
+          <h2 style="margin-top: 25px">Choose Courses</h2>
+          <p class="muted">Select one or more courses.</p>
+
+          <label class="course"
+            ><input
+              type="checkbox"
+              name="course"
+              value="Java Programming"
+              data-credit="3"
+              onchange="updateCredits()"
+            /><span>Java Programming</span>3 credits</label
+          >
+          <label class="course"
+            ><input
+              type="checkbox"
+              name="course"
+              value="Database"
+              data-credit="3"
+              onchange="updateCredits()"
+            /><span>Database</span>3 credits</label
+          >
+          <label class="course"
+            ><input
+              type="checkbox"
+              name="course"
+              value="Artificial Intelligence"
+              data-credit="4"
+              onchange="updateCredits()"
+            /><span>Artificial Intelligence</span>4 credits</label
+          >
+          <label class="course"
+            ><input
+              type="checkbox"
+              name="course"
+              value="Networking"
+              data-credit="3"
+              onchange="updateCredits()"
+            /><span>Networking</span>3 credits</label
+          >
+          <label class="course"
+            ><input
+              type="checkbox"
+              name="course"
+              value="Web Engineering"
+              data-credit="3"
+              onchange="updateCredits()"
+            /><span>Web Engineering</span>3 credits</label
+          >
+
+          <p>
+            <strong>Total Credits: <span id="totalCredits">0</span></strong>
           </p>
+          <button type="button" onclick="registerCourses()">
+            Register Courses
+          </button>
+          <p id="formMessage" class="error" role="status"></p>
+        </section>
+
+        <aside>
+          <section class="card">
+            <h2>Fee Breakdown</h2>
+            <p class="muted">Fee per credit: Tk 3,610</p>
+            <p>Tuition Fee: <strong id="previewTuition">Tk 0.00</strong></p>
+            <p>Discount: <strong id="previewDiscount">Tk 0.00</strong></p>
+            <div class="total">
+              <p>Estimated Payment</p>
+              <h2 id="previewFinal">Tk 0.00</h2>
+            </div>
+            <small id="discountHint" class="muted"
+              >Select more than 12 credits for a 10% discount.</small
+            >
+          </section>
+          <section class="card" id="summary"></section>
         </aside>
       </div>
-      <footer>University Portal · Course registration demo</footer>
-    </main>
-    <script src="script.js"></script>
+      <footer class="muted" style="text-align: center">
+        University Portal · Course registration demo
+      </footer>
+    </div>
+
+    <script>
+      const FEE = 3610;
+      const DISCOUNT = 10;
+
+      function money(amount) {
+        return (
+          "Tk " +
+          amount.toLocaleString("en-BD", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        );
+      }
+
+      function validateStudentId() {
+        const id = document.getElementById("studentId").value.trim();
+        const message = document.getElementById("idMessage");
+        const valid = /^\d{10}$/.test(id);
+
+        message.textContent = valid
+          ? "Student ID is valid."
+          : "Student ID must contain exactly 10 digits.";
+        message.className = valid ? "success" : "error";
+        return valid;
+      }
+
+      function updateCredits() {
+        const courses = document.querySelectorAll(
+          'input[name="course"]:checked',
+        );
+        let credits = 0;
+
+        courses.forEach((course) => (credits += Number(course.dataset.credit)));
+
+        const tuition = credits * FEE;
+        const discount = credits > 12 ? (tuition * DISCOUNT) / 100 : 0;
+
+        document.getElementById("totalCredits").textContent = credits;
+        document.getElementById("previewTuition").textContent = money(tuition);
+        document.getElementById("previewDiscount").textContent =
+          money(discount);
+        document.getElementById("previewFinal").textContent = money(
+          tuition - discount,
+        );
+        document.getElementById("discountHint").textContent =
+          credits > 12
+            ? "10% discount applied."
+            : "Select more than 12 credits for a 10% discount.";
+      }
+
+      function registerCourses() {
+        const name = document.getElementById("studentName").value.trim();
+        const id = document.getElementById("studentId").value.trim();
+        const courses = document.querySelectorAll(
+          'input[name="course"]:checked',
+        );
+        const message = document.getElementById("formMessage");
+        const summary = document.getElementById("summary");
+
+        if (!name) {
+          message.textContent = "Please enter the student name.";
+          return;
+        }
+        if (!validateStudentId()) {
+          message.textContent = "Please enter a valid 10-digit Student ID.";
+          return;
+        }
+        if (courses.length === 0) {
+          message.textContent = "Please select at least one course.";
+          return;
+        }
+
+        let credits = 0;
+        let courseList = "";
+        courses.forEach((course) => {
+          credits += Number(course.dataset.credit);
+          courseList +=
+            "<li>" +
+            course.value +
+            " - " +
+            course.dataset.credit +
+            " credits</li>";
+        });
+
+        const tuition = credits * FEE;
+        const discount = credits > 12 ? (tuition * DISCOUNT) / 100 : 0;
+
+        message.textContent = "";
+        summary.innerHTML =
+          "<h2 class='success'>Registration Successful!</h2>" +
+          "<p><strong>Student:</strong> " +
+          name +
+          "</p>" +
+          "<p><strong>Student ID:</strong> " +
+          id +
+          "</p>" +
+          "<h3>Selected Courses</h3><ul>" +
+          courseList +
+          "</ul>" +
+          "<p><strong>Total Credits:</strong> " +
+          credits +
+          "</p>" +
+          "<p><strong>Tuition Fee:</strong> " +
+          money(tuition) +
+          "</p>" +
+          "<p><strong>Discount:</strong> " +
+          money(discount) +
+          "</p>" +
+          "<p><strong>Final Payment:</strong> " +
+          money(tuition - discount) +
+          "</p>";
+        summary.style.display = "block";
+      }
+
+      updateCredits();
+    </script>
   </body>
 </html>

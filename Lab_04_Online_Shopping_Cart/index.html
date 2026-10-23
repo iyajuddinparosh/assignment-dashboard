@@ -2,15 +2,264 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="theme-color" content="#7c3aed" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shopping Cart</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Online Shopping Cart</title>
+    <style>
+      :root {
+        --purple: #6d28d9;
+        --dark: #4c1d95;
+        --light: #f5f0ff;
+        --text: #252033;
+        --muted: #6b6478;
+        --border: #e5dcef;
+        --green: #15803d;
+        --green-light: #f0fdf4;
+        --orange: #c2410c;
+        --orange-light: #fff7ed;
+        --blue: #0369a1;
+        --blue-light: #f0f9ff;
+        --pink: #be185d;
+        --pink-light: #fdf2f8;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 28px 16px;
+        font-family: Arial, sans-serif;
+        color: var(--text);
+        background: linear-gradient(135deg, #f5f0ff, #e9ddff 50%, #f8f5ff);
+      }
+      .container {
+        max-width: 900px;
+        margin: auto;
+        padding: 28px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: 0 16px 40px #37205c1c;
+      }
+      h1 {
+        margin: 0 0 8px;
+        color: var(--dark);
+        font-size: clamp(25px, 4vw, 34px);
+      }
+      h2 {
+        color: var(--dark);
+        margin: 26px 0 12px;
+      }
+      .muted {
+        color: var(--muted);
+        margin: 0 0 20px;
+      }
+      .products {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 14px;
+        margin: 20px 0;
+      }
+      .product {
+        padding: 17px;
+        border: 1px solid var(--border);
+        border-radius: 13px;
+        background: linear-gradient(145deg, #fff, var(--light));
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .product strong {
+        font-size: 17px;
+      }
+      .price {
+        color: var(--purple);
+        font-weight: 700;
+      }
+      .product:nth-child(4n + 1) {
+        background: linear-gradient(145deg, #fff, #f5f0ff);
+        border-color: #ddd0ff;
+      }
+      .product:nth-child(4n + 2) {
+        background: linear-gradient(145deg, #fff, var(--green-light));
+        border-color: #bbf7d0;
+      }
+      .product:nth-child(4n + 2) .price {
+        color: var(--green);
+      }
+      .product:nth-child(4n + 3) {
+        background: linear-gradient(145deg, #fff, var(--orange-light));
+        border-color: #fed7aa;
+      }
+      .product:nth-child(4n + 3) .price {
+        color: var(--orange);
+      }
+      .product:nth-child(4n) {
+        background: linear-gradient(145deg, #fff, var(--blue-light));
+        border-color: #bae6fd;
+      }
+      .product:nth-child(4n) .price {
+        color: var(--blue);
+      }
+      button {
+        border: 0;
+        border-radius: 9px;
+        padding: 11px 14px;
+        background: var(--purple);
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      button:hover {
+        background: var(--dark);
+      }
+      .product:nth-child(4n + 2) button {
+        background: var(--green);
+      }
+      .product:nth-child(4n + 2) button:hover {
+        background: #166534;
+      }
+      .product:nth-child(4n + 3) button {
+        background: var(--orange);
+      }
+      .product:nth-child(4n + 3) button:hover {
+        background: #9a3412;
+      }
+      .product:nth-child(4n) button {
+        background: var(--blue);
+      }
+      .product:nth-child(4n) button:hover {
+        background: #075985;
+      }
+      .secondary {
+        background: #eee8f8;
+        color: var(--dark);
+      }
+      .table-wrap {
+        overflow-x: auto;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        margin: 12px 0;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 11px 12px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+      }
+      th {
+        background: var(--light);
+        color: var(--dark);
+        font-size: 13px;
+        text-transform: uppercase;
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      td input {
+        width: 70px;
+        padding: 7px;
+        border: 1px solid var(--border);
+        border-radius: 7px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: 700;
+        margin: 14px 0 6px;
+      }
+      input {
+        font: inherit;
+      }
+      .grid input {
+        width: 100%;
+        margin-top: 7px;
+        padding: 11px;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+      }
+      .result {
+        margin-top: 18px;
+        padding: 18px;
+        background: var(--light);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+      }
+      .result:first-of-type {
+        background: linear-gradient(145deg, #f5f0ff, #fff);
+        border-color: #ddd0ff;
+      }
+      .result:last-child {
+        background: linear-gradient(145deg, #fdf2f8, #fff);
+        border-color: #fbcfe8;
+        box-shadow: inset 4px 0 #be185d;
+      }
+      .result:last-child h2 {
+        color: #9d174d;
+      }
+      .total {
+        color: var(--dark);
+      }
+      .result p {
+        margin: 8px 0;
+      }
+      .total {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--dark);
+      }
+      #couponMessage {
+        font-size: 13px;
+        font-weight: 700;
+      }
+      @media (max-width: 560px) {
+        body {
+          padding: 15px 9px;
+        }
+        .container {
+          padding: 19px 13px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        th,
+        td {
+          padding: 9px;
+          font-size: 12px;
+        }
+      }
+      @media print {
+        body {
+          background: #fff;
+          padding: 0;
+        }
+        .container {
+          box-shadow: none;
+          border: 0;
+        }
+        .products,
+        .controls,
+        .no-print {
+          display: none !important;
+        }
+      }
+    </style>
   </head>
   <body>
     <main class="container">
       <h1>Online Shopping Cart</h1>
-      <p class="muted">Add products, change quantities, apply SAVE10 coupon</p>
+      <p class="muted">
+        Add products, change quantities, and apply the SAVE10 coupon.
+      </p>
       <div id="products" class="products"></div>
       <h2>Your Cart</h2>
       <div class="table-wrap">
@@ -27,18 +276,135 @@
           <tbody id="cart"></tbody>
         </table>
       </div>
-      <div class="grid">
-        <label>Coupon code<input id="coupon" placeholder="SAVE10" /></label
-        ><label
+      <div class="grid controls">
+        <label
+          >Coupon Code<input id="coupon" placeholder="Enter SAVE10"
+        /></label>
+        <label
           >VAT (%)<input id="vatRate" type="number" min="0" max="100" value="5"
         /></label>
       </div>
-      <button onclick="applyCoupon()">Apply Coupon</button>
-      <p id="couponMessage"></p>
+      <div class="no-print">
+        <button type="button" onclick="applyCoupon()">Apply Coupon</button>
+        <p id="couponMessage"></p>
+        <button type="button" onclick="generateInvoice()">
+          Generate Invoice
+        </button>
+        <button type="button" class="secondary" onclick="window.print()">
+          Print Invoice
+        </button>
+      </div>
       <section id="totals" class="result"></section>
-      <button onclick="generateInvoice()">Generate Invoice</button>
       <section id="invoice" class="result" hidden></section>
     </main>
-    <script src="script.js"></script>
+    <script>
+      const products = [
+        ["Laptop", 50000],
+        ["Mouse", 1000],
+        ["Keyboard", 2500],
+        ["Monitor", 15000],
+      ];
+      let cart = {},
+        discountRate = 0;
+      const $ = (id) => document.getElementById(id);
+      const money = (n) =>
+        "Tk " +
+        n.toLocaleString("en-BD", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+
+      $("products").innerHTML = products
+        .map(
+          ([name, price]) => `
+<article class="product">
+<strong>${name}</strong><span class="price">${money(price)}</span>
+<button type="button" onclick="addToCart('${name}')">Add to Cart</button>
+</article>`,
+        )
+        .join("");
+
+      function addToCart(name) {
+        cart[name] = (cart[name] || 0) + 1;
+        renderCart();
+      }
+      function removeItem(name) {
+        delete cart[name];
+        renderCart();
+      }
+      function changeQty(name, value) {
+        const qty = Math.max(0, Math.floor(Number(value) || 0));
+        if (qty === 0) delete cart[name];
+        else cart[name] = qty;
+        renderCart();
+      }
+      function applyCoupon() {
+        const code = $("coupon").value.trim().toUpperCase();
+        discountRate = code === "SAVE10" ? 0.1 : 0;
+        $("couponMessage").textContent = discountRate
+          ? "SAVE10 applied: 10% discount."
+          : code
+            ? "Invalid coupon code."
+            : "Enter coupon code SAVE10.";
+        renderCart();
+      }
+      function calculateTotals() {
+        const subtotal = Object.entries(cart).reduce((sum, [name, qty]) => {
+          const product = products.find((item) => item[0] === name);
+          return sum + qty * product[1];
+        }, 0);
+        const discount = subtotal * discountRate;
+        const afterDiscount = subtotal - discount;
+        const vatRate = Math.min(
+          100,
+          Math.max(0, Number($("vatRate").value) || 0),
+        );
+        const vat = (afterDiscount * vatRate) / 100;
+        return { subtotal, discount, vat, total: afterDiscount + vat };
+      }
+      function renderCart() {
+        $("cart").innerHTML =
+          Object.entries(cart)
+            .map(([name, qty]) => {
+              const price = products.find((item) => item[0] === name)[1];
+              return `<tr>
+      <td>${name}</td><td>${money(price)}</td>
+      <td><input type="number" min="0" step="1" value="${qty}" aria-label="${name} quantity" onchange="changeQty('${name}',this.value)"></td>
+      <td>${money(price * qty)}</td>
+      <td><button type="button" class="secondary" onclick="removeItem('${name}')">Remove</button></td>
+    </tr>`;
+            })
+            .join("") || '<tr><td colspan="5">Your cart is empty.</td></tr>';
+
+        const t = calculateTotals();
+        $("totals").innerHTML = `
+    <p>Subtotal: ${money(t.subtotal)}</p>
+    <p>Discount: −${money(t.discount)}</p>
+    <p>VAT: ${money(t.vat)}</p>
+    <p class="total">Total: ${money(t.total)}</p>`;
+        $("invoice").hidden = true;
+      }
+      function generateInvoice() {
+        if (!Object.keys(cart).length) {
+          $("invoice").hidden = false;
+          $("invoice").innerHTML =
+            "<p>Please add a product to your cart before generating an invoice.</p>";
+          return;
+        }
+        const t = calculateTotals();
+        $("invoice").hidden = false;
+        $("invoice").innerHTML = `
+    <h2>Shopping Invoice</h2>
+    <p>Date: ${new Date().toLocaleString()}</p>
+    ${$("cart").innerHTML}
+    <hr>
+    <p>Subtotal: ${money(t.subtotal)}</p>
+    <p>Discount: −${money(t.discount)}</p>
+    <p>VAT: ${money(t.vat)}</p>
+    <p class="total">Total Amount: ${money(t.total)}</p>`;
+      }
+      $("vatRate").addEventListener("input", renderCart);
+      renderCart();
+    </script>
   </body>
 </html>
